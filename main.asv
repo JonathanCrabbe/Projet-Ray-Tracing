@@ -1,0 +1,8 @@
+%Ceci est le script principal dans lequel est effectué la simulation
+
+wall1 = Wall(0,0,0,20,12,6); 
+wall2 = Wall(20,0,20,20,12,6); 
+wall3 = Wall(0,20,20,20,12,6); 
+wall4 = Wall(0,0,20,0,12,6); 
+
+plot([wall1.x1,wall1.y1],[wall1.x2,wall1.y2]);
