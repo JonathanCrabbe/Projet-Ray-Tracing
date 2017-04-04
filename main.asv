@@ -1,8 +1,21 @@
-%Ceci est le script principal dans lequel est effectué la simulation
+%Ceci est le script principal dans lequel est effectuée la simulation
 
-wall1 = Wall(0,0,0,20,12,6); 
-wall2 = Wall(20,0,20,20,12,6); 
-wall3 = Wall(0,20,20,20,12,6); 
-wall4 = Wall(0,0,20,0,12,6); 
+%Initialisation des constantes:
 
-plot([wall1.x1,wall1.y1],[wall1.x2,wall1.y2]);
+eps = 
+
+
+
+wall1 = Wall(0,0,0,20,5,6); 
+wall2 = Wall(20,0,20,20,5,6); 
+wall3 = Wall(0,20,20,20,5,6); 
+wall4 = Wall(0,0,20,0,5,6); 
+wall5 = Wall(0,5,5,5,12,6);
+
+
+wall1.plot();
+wall2.plot();
+wall3.plot();
+wall4.plot();
+wall5.plot();
+
