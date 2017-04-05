@@ -1,6 +1,5 @@
 %Ceci est le script principal dans lequel est effectu�e la simulation
 
-
 %Initialisation des constantes:
 
 epsMur = 5; %Permitivit� relative des murs (en b�ton)
