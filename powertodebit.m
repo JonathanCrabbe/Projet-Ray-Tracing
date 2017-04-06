@@ -1,4 +1,4 @@
-function [ debit ] = powertodebit( power)
+function [ debit ] = powerToDebit( power)
 %Cette fonction calcule le débit binaire en Mbps associé à une puissance 
 %donnée en W en utilisant l'interpolation linéaire suggérée dans les consignes
 
