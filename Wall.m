@@ -23,10 +23,13 @@ classdef Wall
             obj.ep = ep;
         end
         
+        %Affiche le mur dans l'environement 
         function plot(obj)
             plot([obj.x1,obj.x2], [obj.y1,obj.y2], 'Color', 'b');
             hold on;
         end
+        
+        %Renvoie un vecteur unitaire normal au mur
     end 
 end
 

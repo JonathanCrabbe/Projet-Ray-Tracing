@@ -9,6 +9,10 @@ e = 0.4; %Epaisseur mur (m)
 c = 299792458; %Vitesse de la lumiï¿½re dans le vide (m/s)
 f = 2.45*10^9; %Frï¿½quence des communications (Hertz) 
 lambda = c/f; %Longueur d'onde rayonnï¿½e (m)
+Pem = 0.1; %La puissance rayonnée par l'émetteur est de 0,1W (20 dBm)
+
+
+
 %Construction des objets murs de l'environement
 
 wall1 = Wall(0,0,0,L,epsMur, sigmaMur,e); 
@@ -30,10 +34,16 @@ end
 stationBase = Antenne(10,10,lambda);
 recepteur = Antenne(40,40,lambda);
 
+%Calcul du rayon direct
+
+
+
 %Affichage des antennes:
 
 stationBase.plot();
 recepteur.plot();
+
+
 
 
 
