@@ -15,7 +15,23 @@ yintersect = m1*xintersect + b1;
 isPointInside = @(xint,myline) ...
     (xint >= myline(1,1) && xint <= myline(2,1)) || ...
     (xint >= myline(2,1) && xint <= myline(1,1));
-doIntersect = isPointInside(xintersect,line1) && ...
-         isPointInside(xintersect,line2);
+
+if( m1 == m2) %Droites paralleles
+    doIntersect = (b1 == b2);
+
+
+elseif(line1(2,1) == line1(1,1)) %Droite 1 verticale
+    doIntersect = isPointInside(line1(1,1), line2);
+
+
+elseif(line2(2,1) == line2(1,1)) %Droite 1 verticale
+    doIntersect = isPointInside(line2(1,1), line1);
+
+    
+else
+    doIntersect = isPointInside(xintersect,line1) && ...
+     isPointInside(xintersect,line2);
+ end
+
 end
 
