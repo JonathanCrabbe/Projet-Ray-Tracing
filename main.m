@@ -49,9 +49,11 @@ recepteur = Antenne(40,40,lambda);
  yd2 = recepteur.y;
  d = sqrt((xd1-xd2)^2 + (yd1-yd2)^2); %Distance parcourue
  
+ directRay = Rayon(d); %Construction de l'objet rayon
+ 
  lineRay = [xd1 yd1; xd2 yd2]; %Segment associé au rayon
  plot(lineRay(:,1),lineRay(:,2)); hold on;
-
+ vectRay = [xd2-xd1 yd2-yd1]/sqrt((xd1-xd2)^2 + (yd1-yd2)^2);
 %Détermination de l'atténuation par les murs rencontrés:
 
 for i = 1:numel(wallList)
@@ -61,8 +63,10 @@ for i = 1:numel(wallList)
     
     %Le rayon intersecte-t-il le mur?
  
-    if (verifyIntersection(lineRay,lineWall))
-        disp('Boom');
+    if (verifyIntersection(lineRay,lineWall)) %Si le mur est rencontré, compatbiliser atténuation:
+       vectWall = walli.getNormVect(); %Vecteur normal au mur normé
+       thetai = acos(abs(dot(vectRay,vectWall))); %Angle d'incidence
+       directRay.At = directRay.At * walli.getTransmission(thetai); %Atténuation
     end 
         
 end

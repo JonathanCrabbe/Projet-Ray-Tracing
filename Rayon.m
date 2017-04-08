@@ -4,7 +4,8 @@ classdef Rayon
 
     properties
         d %Distance parcoure par le rayon avant d'atteindre l'émetteur
-        At %Atténuation totale accumulée par le rayon lors de ses interactions
+        theta %Direction d'émission relativement à l'antenne
+        At = 1;%Atténuation totale accumulée par le rayon lors de ses interactions
   
     end
     
@@ -12,7 +13,6 @@ classdef Rayon
         %Constructeur:
         function obj = Rayon(d,At)
             obj.d = d;
-            obj.At = At;
         end
     end 
 end

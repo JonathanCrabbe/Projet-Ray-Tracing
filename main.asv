@@ -19,9 +19,11 @@ wall1 = Wall(0,0,0,L,epsMur, sigmaMur,e);
 wall2 = Wall(0,0,L,0,epsMur, sigmaMur,e); 
 wall3 = Wall(L,0,L,L,epsMur, sigmaMur,e); 
 wall4 = Wall(0,L,L,L,epsMur, sigmaMur,e); 
+wall5 = Wall(0,L/2,L,L/2,epsMur, sigmaMur,e);
+wall6 = Wall(2*L/3,0,2*L/3,5*L/6,epsMur, sigmaMur,e);
 
 %Crï¿½ation d'un liste contenant les murs: 
-wallList = [wall1, wall2, wall3, wall4];
+wallList = [wall1, wall2, wall3, wall4, wall5, wall6];
 
 %Affichage des murs:
 
@@ -34,15 +36,39 @@ end
 stationBase = Antenne(10,10,lambda);
 recepteur = Antenne(40,40,lambda);
 
-%Calcul du rayon direct
+%1) Calcul du rayon direct:
 
 %Distance parcourue par le rayon direct:
-d = sqrt((stationBase.x-recepteur.x)^2 + (stationBase.y-recepteur.y)^2);
 
+%Point de départ
+ xd1  = stationBase.x; 
+ yd1 = stationBase.y;
+ 
+ %Point d'arrivée
+ xd2 = recepteur.x; 
+ yd2 = recepteur.y;
+ d = sqrt((xd1-xd2)^2 + (yd1-yd2)^2); %Distance parcourue
+ 
+ directRay = Rayon(d); %Construction de l'objet rayon
+ 
+ lineRay = [xd1 yd1; xd2 yd2]; %Segment associé au rayon
+ plot(lineRay(:,1),lineRay(:,2)); hold on;
+ vectRay = [xd2-xd1 yd2-yd1]/sqrt((xd1-xd2)^2 + (yd1-yd2)^2);
 %Détermination de l'atténuation par les murs rencontrés:
 
 for i = 1:numel(wallList)
-    lineWall = 
+    walli = wallList(i);
+    %Segment de droite associé au mur:
+    lineWall = [walli.x1 walli.y1; walli.x2 walli.y2]; 
+    
+    %Le rayon intersecte-t-il le mur?
+ 
+    if (verifyIntersection(lineRay,lineWall)) %Si le mur est rencontré, compatbiliser atténuation:
+       vectWall = walli.getNormVect(); %Vecteur normal au mur normé
+       thetai = acos(abs(dot(vectRay,vectWall))); %Angle d'incidence
+       directRay.At = directRay.At * walli.getTransmission(thetai); %Atténuation
+    end 
+        
 end
 
 %Segment de droite joignant l
