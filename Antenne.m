@@ -27,9 +27,10 @@ classdef Antenne
         end
         
         %Calcule le gain de l'antenne dans la direction theta (formule 5.44):
-        function G = Gain(theta)
-            G = etha*120*pi*(Ia^2/8*pi^2)*(cos(pi*cos(theta)/2)/sin(theta))^2;
+        function G = getGain(obj,theta)
+            G = obj.etha*120*pi*(obj.Ia^2/8*pi^2)*(cos(pi*cos(theta)/2)/sin(theta))^2;
         end
+        
     end 
 end
 

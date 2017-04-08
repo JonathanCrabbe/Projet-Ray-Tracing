@@ -35,6 +35,7 @@ end
 
 stationBase = Antenne(10,10,lambda);
 recepteur = Antenne(40,40,lambda);
+P = 0; %Puissance arrivant au récepteur
 
 %1) Calcul du rayon direct:
 
@@ -48,8 +49,9 @@ recepteur = Antenne(40,40,lambda);
  xd2 = recepteur.x; 
  yd2 = recepteur.y;
  d = sqrt((xd1-xd2)^2 + (yd1-yd2)^2); %Distance parcourue
+ theta = acos(abs(dot(vectRay,[0 1]))); %Angle relativement à l'antenne
  
- directRay = Rayon(d); %Construction de l'objet rayon
+ directRay = Rayon(d,theta); %Construction de l'objet rayon
  
  lineRay = [xd1 yd1; xd2 yd2]; %Segment associé au rayon
  plot(lineRay(:,1),lineRay(:,2)); hold on;
@@ -71,7 +73,7 @@ for i = 1:numel(wallList)
         
 end
 
-%Segment de droite joignant l
+E =
 
 %Affichage des antennes:
 

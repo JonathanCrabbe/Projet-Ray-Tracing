@@ -41,6 +41,7 @@ classdef Wall
             Z1 = sqrt(eps0/mu0); %Impédance vide
             gammap = (Z2*cos(thetai) - Z1*cos(thetat))/(Z2*cos(thetai)+Z1*cos(thetat)); %Coefficient de réflection normal
             s = obj.ep/cos(thetat); %Distance parcourue dans le mur
+            %Calcul du coefficient de transmission par 8.44:
             T = abs((exp(-i*(betam*s))*(1 - gammap^2))/... 
                 (1- (gammap^2 * exp(-2*i*betam*2*s + i*2*beta*s*sin(thetat)*sin(thetai)))));
         end
