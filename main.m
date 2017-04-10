@@ -36,6 +36,7 @@ end
 stationBase = Antenne(10,10,lambda);
 recepteur = Antenne(40,40,lambda);
 P = 0; %Puissance arrivant au récepteur
+E = 0; %Champ arrivant au récepteur
 
 %1) Calcul du rayon direct:
 
@@ -45,35 +46,44 @@ P = 0; %Puissance arrivant au récepteur
  xd1  = stationBase.x; 
  yd1 = stationBase.y;
  
+ 
  %Point d'arrivée
  xd2 = recepteur.x; 
  yd2 = recepteur.y;
- d = sqrt((xd1-xd2)^2 + (yd1-yd2)^2); %Distance parcourue
- theta = acos(abs(dot(vectRay,[0 1]))); %Angle relativement à l'antenne
  
- directRay = Rayon(d,theta); %Construction de l'objet rayon
+ directRay = Rayon(2); %Construction de l'objet rayon (à 2 points)
+ 
+ vectRay = [xd2-xd1 yd2-yd1]/sqrt((xd1-xd2)^2 + (yd1-yd2)^2);
+ 
+ %Affichage du rayon:
+ directRay.x1 = xd1;
+ directRay.y1 = yd1;
+ directRay.x2 =xd2;
+ directRay.y2 = yd2;
+ directRay.plot();
  
  lineRay = [xd1 yd1; xd2 yd2]; %Segment associé au rayon
- plot(lineRay(:,1),lineRay(:,2)); hold on;
- vectRay = [xd2-xd1 yd2-yd1]/sqrt((xd1-xd2)^2 + (yd1-yd2)^2);
+ 
 %Détermination de l'atténuation par les murs rencontrés:
 
 for i = 1:numel(wallList)
     walli = wallList(i);
+    
     %Segment de droite associé au mur:
-    lineWall = [walli.x1 walli.y1; walli.x2 walli.y2]; 
+    lineWall = walli.getLine(); 
     
     %Le rayon intersecte-t-il le mur?
  
     if (verifyIntersection(lineRay,lineWall)) %Si le mur est rencontré, compatbiliser atténuation:
-       vectWall = walli.getNormVect(); %Vecteur normal au mur normé
-       thetai = acos(abs(dot(vectRay,vectWall))); %Angle d'incidence
-       directRay.At = directRay.At * walli.getTransmission(thetai); %Atténuation
+        vectWall = walli.getNormVect(); %Vecteur normal au mur normé
+        thetai = acos(abs(dot(vectRay,vectWall))); %Angle d'incidence
+        directRay.At = directRay.At * walli.getTransmission(thetai); %Atténuation
     end 
         
 end
-G = stationBase.getGain(directRay.theta); %Gain dans la direction considérée
-E = directRay.getE(G) %Calcul du champ arrivant au récepteur;
+theta = acos(abs(dot(vectRay,[0 1]))); %Angle relativement à l'antenne
+G = stationBase.getGain(theta); %Gain dans la direction considérée
+E = directRay.getE(G); %Calcul du champ arrivant au récepteur;
 
 %Affichage des antennes:
 

@@ -1,7 +1,7 @@
 classdef Wall
     %Cette classe contient les propriétés des murs de l'environement
 
-    properties
+    properties %Propriétés variables du mur
         x1 %Abscisse extrémité 1
         y1 %Ordonnée extrémité 1
         x2 %Abscisse extrémité 2
@@ -9,6 +9,16 @@ classdef Wall
         perm %Permitivité relative
         cond %Conductivité
         ep %Epaisseur
+        eps2; %Permitivité mur
+        Z2 ; %Impédance mur
+        betam ; %Norme du vecteur d'onde dans le mur
+    end
+    
+    properties (Constant = true) %Constantes utiles dans les calculs
+        mu0 = 4*pi*10^-7;
+        eps0 = 10^-9 / (36*pi);  
+        beta = 2*pi*(2.45*10^9)*sqrt(4*pi*10^-7 *10^-9 / (36*pi)); %Norme du vecteur d'onde dans le vide
+        Z1 = sqrt((10^-9 / (36*pi))/(4*pi*10^-7)); %Impédance vide
     end
     
     methods
@@ -21,6 +31,10 @@ classdef Wall
             obj.perm = perm;
             obj.cond = cond;
             obj.ep = ep;
+            obj.eps2 = obj.perm * obj.eps0;
+            obj.Z2 = sqrt((obj.eps2)/(obj.mu0));
+            obj.betam = 2*pi*(2.45*10^9)*sqrt(obj.eps2*obj.mu0);
+            
         end
         
         %Affiche le mur dans l'environement 
@@ -31,25 +45,24 @@ classdef Wall
         
         %Renvoie le coefficient de transmission au travers du mur
         function T = getTransmission(obj,thetai)
-            mu0 = 4*pi*10^-7;
-            eps0 = 10^-9 / (36*pi);
-            eps2 = obj.perm * eps0; %Permitivité mur
-            betam = 2*pi*(2.45*10^9)*sqrt(eps2*mu0); %Norme du vecteur d'onde dans le mur
-            beta = 2*pi*(2.45*10^9)*sqrt(eps0*mu0); %Norme du vecteur d'onde dans le vide
-            thetat = asin(sqrt(1/obj.perm)*sin(thetai)); %Angle de transmission
-            Z2 = sqrt(eps2/mu0); %Impédance mur
-            Z1 = sqrt(eps0/mu0); %Impédance vide
-            gammap = (Z2*cos(thetai) - Z1*cos(thetat))/(Z2*cos(thetai)+Z1*cos(thetat)); %Coefficient de réflection normal
+            thetat = asin(sqrt(1/obj.perm)*sin(thetai)); %Angle de transmission 
+            gammap = (obj.Z2*cos(thetai) - obj.Z1*cos(thetat))/...
+                (obj.Z2*cos(thetai)+obj.Z1*cos(thetat)); %Coefficient de réflection normal
             s = obj.ep/cos(thetat); %Distance parcourue dans le mur
             %Calcul du coefficient de transmission par 8.44:
-            T = abs((exp(-i*(betam*s))*(1 - gammap^2))/... 
-                (1- (gammap^2 * exp(-2*i*betam*2*s + i*2*beta*s*sin(thetat)*sin(thetai)))));
+            T = (exp(-i*(obj.betam*s))*(1 - gammap^2))/... 
+                (1- (gammap^2 * exp(-2*i*obj.betam*2*s + i*2*obj.beta*s*sin(thetat)*sin(thetai))));
         end
         
         %Renvoie un vecteur normal au mur:
         function vect = getNormVect(obj)
             vect = [obj.y2-obj.y1  -obj.x2+obj.x1]/ ...
                 sqrt((obj.x1-obj.x2)^2 + (obj.y1-obj.y2)^2);
+        end
+        
+        %Renvoie le vecteur permettant de dessiner le mur:
+        function line = getLine(obj)
+            line = [obj.x1 obj.y1; obj.x2 obj.y2];
         end
     end 
 end
