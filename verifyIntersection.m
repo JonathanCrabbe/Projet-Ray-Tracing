@@ -24,7 +24,7 @@ elseif(line1(2,1) == line1(1,1)) %Droite 1 verticale
     doIntersect = isPointInside(line1(1,1), line2);
 
 
-elseif(line2(2,1) == line2(1,1)) %Droite 1 verticale
+elseif(line2(2,1) == line2(1,1)) %Droite 2 verticale
     doIntersect = isPointInside(line2(1,1), line1);
 
     

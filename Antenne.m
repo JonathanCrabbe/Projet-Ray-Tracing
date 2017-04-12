@@ -22,7 +22,7 @@ classdef Antenne
         %Aficchage de l'antenne:
         function plot(obj)
             plot([obj.x ,obj.x],...
-            [obj.y - (obj.lambda)/4,obj.y + (obj.lambda)/4], 'Color', 'g');
+            [obj.y - (obj.lambda)/4,obj.y + (obj.lambda)/4], '*m');
             hold on;
         end
         

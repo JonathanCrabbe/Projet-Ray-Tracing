@@ -83,7 +83,49 @@ for i = 1:numel(wallList)
 end
 theta = acos(abs(dot(vectRay,[0 1]))); %Angle relativement à l'antenne
 G = stationBase.getGain(theta); %Gain dans la direction considérée
-E = directRay.getE(G); %Calcul du champ arrivant au récepteur;
+E = E + directRay.getE(G); %Calcul du champ arrivant au récepteur;
+
+%2) Calcul des réflections simples:
+
+for i = 1:(numel(wallList)) %Pour chaque mur:
+    
+   reflectedRayi = Rayon(3); %création du rayon refletté mar le mur i
+   reflectedRayi.x1 = xd1;
+   reflectedRayi.y1 = yd1;
+   reflectedRayi.x3 = xd2;
+   reflectedRayi.y3 = yd2;
+   
+   
+   %Calcul de l'intersection avec le mur par la normale au mur: 
+   walli = wallList(i);
+   wallVecti = walli.getNormVect();
+   lineRay = [xd1 yd1; xd1+wallVecti(1) yd1+wallVecti(2)];
+   lineWall = walli.getLine(); 
+   intersectioni = getIntersection(lineRay, lineWall);
+   
+   %Coordonnées Antenne miroire:
+   xam = 2*intersectioni(1)-xd1;
+   yam = 2*intersectioni(2)-yd1;
+   plot( xam,yam, '*r'); hold on;
+   
+   %Point de réflection théorique:
+    lineRay = [xam yam; xd2 yd2 ];
+    intersectioni = getIntersection(lineWall,lineRay);
+    
+    %Vérification que le point de réflection est sur le mur:
+    if(verifyIntersection(lineRay,lineWall))
+        reflectedRayi.x2 = intersectioni(1);
+        reflectedRayi.y2 = intersectioni(2);
+    else
+        reflectedRayi.x2 = 1/0;
+        reflectedRayi.y2 = 1/0;
+    end
+   %Affichage rayon:
+   reflectedRayi.plot();
+end
+
+
+
 
 %Affichage des antennes:
 
