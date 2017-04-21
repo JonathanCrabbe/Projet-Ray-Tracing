@@ -60,7 +60,7 @@ E = 0; %Champ arrivant au récepteur
  directRay.y1 = yd1;
  directRay.x2 =xd2;
  directRay.y2 = yd2;
- directRay.plot();
+ %directRay.plot();
  
  lineRay = [xd1 yd1; xd2 yd2]; %Segment associé au rayon
  
@@ -121,10 +121,68 @@ for i = 1:(numel(wallList)) %Pour chaque mur:
         reflectedRayi.y2 = 1/0;
     end
    %Affichage rayon:
-   reflectedRayi.plot();
+   %reflectedRayi.plot();
 end
 
+for i = 1:(numel(wallList)) %Pour chaque couple de mur:
+      for j = 1:(numel(wallList))  
+          
+          if(j ~= i)
+                reflectedRayij = Rayon(4);
 
+                reflectedRayij.x1 = xd1;
+                reflectedRayij.y1 = yd1;
+                reflectedRayij.x4 = xd2;
+                reflectedRayij.y4 = yd2;
+
+                walli = wallList(i);
+                wallj = wallList(j);
+                wallVecti = walli.getNormVect();
+                wallVectj = wallj.getNormVect();
+
+                lineRayi = [xd1 yd1; xd1+wallVecti(1) yd1+wallVecti(2)];
+                lineRayj = [xd2 yd2; xd1+wallVectj(1) yd1+wallVectj(2)];
+
+                lineWalli = walli.getLine(); 
+                lineWallj = wallj.getLine();
+
+                intersectioni = getIntersection(lineRayi, lineWalli);
+                intersectionj = getIntersection(lineRayj, lineWallj);
+
+                %Coordonnées des antennes miroires:
+                xami = 2*intersectioni(1)-xd1;
+                yami = 2*intersectioni(2)-yd1;
+
+                xamj = 2*intersectionj(1)-xd2;
+                yamj = 2*intersectionj(2)-yd2;
+
+                plot( xami,yami, '*c'); hold on;
+                plot( xamj,yamj, '*c'); hold on;
+
+                %Points de réflection théorique:
+                lineRay = [xami yami; xamj yamj ];
+                intersectioni = getIntersection(lineWalli,lineRay);
+                intersectionj = getIntersection(lineWallj,lineRay);
+
+                %Vérification que les point de réflection sont sur le mur:
+                if(verifyIntersection(lineRay,lineWalli) && verifyIntersection(lineRay,lineWallj))
+                    reflectedRayij.x2 = intersectioni(1);
+                    reflectedRayij.y2 = intersectioni(2);
+                    reflectedRayij.x3 = intersectionj(1);
+                    reflectedRayij.y3 = intersectionj(2);
+                else
+                    reflectedRayij.x2 = 1/0;
+                    reflectedRayij.y2 = 1/0;
+                    reflectedRayij.x3 = 1/0;
+                    reflectedRayij.y3 = 1/0;
+                end
+
+
+                   %Affichage rayon:
+                   reflectedRayij.plot();
+          end
+      end 
+end
 
 
 %Affichage des antennes:
