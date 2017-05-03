@@ -27,16 +27,21 @@ classdef Corner
         
         %Renvoie le coefficient de diffraction au travers du mur
         function D = getDiffraction(obj,thetai)
-            phip = ; % Angle d'incidence
+            phip = thetai; % Angle d'incidence
             phi = ; % Angle de refraction
             delta = pi - (phip-phi);
             sp = ; % Distance à la source
             s = ; % Dista,ce au recepteur
             L = s*sp/(s+sp);
             %Calcul du coefficient de transmission par 8.79:
-            D = ;
+            ft = obj.FT(2*obj.beta*L*(sin(delta/2))^2;
+            D = -(exp(-i*pi/4)/(2*sqrt(2*pi*obj.beta*L)))*(ft/sin(delta/2));
         end
         
+        function ft = FT(obj,x)
+            fun = @(t) exp(-i*t^2);
+            ft = 2*i*sqrt(x)*exp(j*x)*integral(fun,sqrt(x),Inf);
+        end
     end 
 end
 
