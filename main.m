@@ -114,22 +114,53 @@ for i = 1:(numel(wallList)) %Pour chaque mur:
     
     %V�rification que le point de r�flection est sur le mur:
     if(verifyIntersection(lineRay,lineWall))
-        reflectedRayi.x2 = intersectioni(1);
-        reflectedRayi.y2 = intersectioni(2);
-        vectRayi = [reflectedRayi.x2-xd1 reflectedRayi.y2-yd1]/sqrt((xd1-reflectedRayi.x2)^2 + (yd1-reflectedRayi.y2)^2);
-        thetai = acos(abs(dot(vectRayi,wallVecti))); %Angle d'incidence
-        reflectedRayi.At = reflectedRayi.At * walli.getTransmission(thetai);
-    else
-        reflectedRayi.x2 = 1/0;
-        reflectedRayi.y2 = 1/0;
-        reflectedRayi.At = 0;
-    end
+       reflectedRayi.x2 = intersectioni(1);
+       reflectedRayi.y2 = intersectioni(2);
+       
+       % Coefficient de réflexion
+       
+       vectRay1 = [reflectedRayi.x2-xd1 reflectedRayi.y2-yd1]/sqrt((xd1-reflectedRayi.x2)^2 + (yd1-reflectedRayi.y2)^2);
+       thetai = acos(abs(dot(vectRay1,wallVecti))); %Angle d'incidence
+       reflectedRayi.At = reflectedRayi.At * walli.getReflexion(thetai);
+       for j = 1:numel(wallList)
+           wallj = wallList(j);
+  
+           %Segment de droite associï¿½ au mur:
+           lineWall = wallj.getLine();
+      
+           %Segment de droite associé aux deux morceaux du rayon
+           lineRay1 = [xd1 yd1; reflectedRayi.x2 reflectedRayi.y2];
+           lineRay2 = [reflectedRayi.x2 reflectedRayi.y2; xd2 yd2];
+      
+           %Le rayon intersecte-t-il les murs?
+ 
+           if (verifyIntersection(lineRay1,lineWall)) %Si le mur est rencontrï¿½, compatbiliser attï¿½nuation:
+               vectWall = wallj.getNormVect(); %Vecteur normal au mur normï¿½
+               vectRay1 = [reflectedRayi.x2-xd1 reflectedRayi.y2-yd1]/sqrt((xd1-reflectedRayi.x2)^2 + (yd1-reflectedRayi.y2)^2);
+               thetai = acos(abs(dot(vectRay1,vectWall))); %Angle d'incidence
+               reflectedRayi.At = reflectedRayi.At * wallj.getTransmission(thetai); %Attï¿½nuation
+           end
+           if (verifyIntersection(lineRay2,lineWall)) %Si le mur est rencontrï¿½, compatbiliser attï¿½nuation:
+               vectWall = wallj.getNormVect(); %Vecteur normal au mur normï¿½
+               vectRay2 = [xd2-reflectedRayi.x2 yd2-reflectedRayi.y2]/sqrt((reflectedRayi.x2-xd2)^2 + (reflectedRayi.y2-yd2)^2);
+               thetai = acos(abs(dot(vectRay2,vectWall))); %Angle d'incidence
+               reflectedRayi.At = reflectedRayi.At * wallj.getTransmission(thetai); %Attï¿½nuation
+           end
+       end
+  
+   else % Rayon pas valable car il n'intersecte pas le mur
+       reflectedRayi.x2 = 1/0;
+       reflectedRayi.y2 = 1/0;
+       reflectedRayi.At = 0;
+   end
+  
+  
    %Affichage rayon:
-   %reflectedRayi.plot();
-   vectRayi = [reflectedRayi.x2-xd1 reflectedRayi.y2-yd1]/sqrt((xd1-reflectedRayi.x2)^2 + (yd1-reflectedRayi.y2)^2);
-   theta = acos(abs(dot(vectRayi,[0 1]))); %Angle relativement à l'antenne
-   G = stationBase.getGain(theta); %Gain dans la direction considérée
-   E = E + reflectedRayi.getE(G); %Calcul du champ arrivant au récepteur;
+  reflectedRayi.plot();
+  vectRay1 = [reflectedRayi.x2-xd1 reflectedRayi.y2-yd1]/sqrt((xd1-reflectedRayi.x2)^2 + (yd1-reflectedRayi.y2)^2);
+  theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement Ã  l'antenne
+  G = stationBase.getGain(theta); %Gain dans la direction considÃ©rÃ©e
+  E = E + reflectedRayi.getE(G) %Calcul du champ arrivant au rÃ©cepteur
 end
 
 for i = 1:(numel(wallList)) %Pour chaque couple de mur:

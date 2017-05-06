@@ -55,7 +55,7 @@ classdef Wall
         end
         
         %Renvoie le coefficient de reflexion sur le mur
-        function Gamma = getRefexion(obj,thetai)
+        function Gamma = getReflexion(obj,thetai)
             thetat = asin(sqrt(1/obj.perm)*sin(thetai)); %Angle de transmission 
             gammap = (obj.Z2*cos(thetai) - obj.Z1*cos(thetat))/...
                 (obj.Z2*cos(thetai)+obj.Z1*cos(thetat)); %Coefficient de réflection normal
