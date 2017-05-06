@@ -112,7 +112,7 @@ for i = 1:(numel(wallList)) %Pour chaque mur:
     lineRay = [xam yam; xd2 yd2 ];
     intersectioni = getIntersection(lineWall,lineRay);
     
-    %V�rification que le point de r�flection est sur le mur:
+    %V�rification que le point de r�flection est sur le mur et si oui, calcul de l'attenuation par reception et transmission:
     if(verifyIntersection(lineRay,lineWall))
        reflectedRayi.x2 = intersectioni(1);
        reflectedRayi.y2 = intersectioni(2);
@@ -160,7 +160,7 @@ for i = 1:(numel(wallList)) %Pour chaque mur:
   vectRay1 = [reflectedRayi.x2-xd1 reflectedRayi.y2-yd1]/sqrt((xd1-reflectedRayi.x2)^2 + (yd1-reflectedRayi.y2)^2);
   theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement Ã  l'antenne
   G = stationBase.getGain(theta); %Gain dans la direction considÃ©rÃ©e
-  E = E + reflectedRayi.getE(G) %Calcul du champ arrivant au rÃ©cepteur
+  E = E + reflectedRayi.getE(G); %Calcul du champ arrivant au rÃ©cepteur
 end
 
 for i = 1:(numel(wallList)) %Pour chaque couple de mur:
@@ -180,7 +180,7 @@ for i = 1:(numel(wallList)) %Pour chaque couple de mur:
                 wallVectj = wallj.getNormVect();
 
                 lineRayi = [xd1 yd1; xd1+wallVecti(1) yd1+wallVecti(2)];
-                lineRayj = [xd2 yd2; xd1+wallVectj(1) yd1+wallVectj(2)];
+                lineRayj = [xd2 yd2; xd2+wallVectj(1) yd2+wallVectj(2)];
 
                 lineWalli = walli.getLine(); 
                 lineWallj = wallj.getLine();
