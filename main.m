@@ -204,9 +204,19 @@ for i = 1:(numel(wallList)) %Pour chaque couple de mur:
                 lineRay = [xami yami; xamj yamj ];
                 intersectioni = getIntersection(lineWalli,lineRay);
                 intersectionj = getIntersection(lineWallj,lineRay);
+                
+                if (intersectioni(1) == intersectionj(1))
+                    if (intersectioni(2) == intersectionj(2))
+                        inter = false;
+                    else
+                        inter = true;
+                    end
+                else
+                    inter = true;
+                end
  
                 %Vï¿½rification que les point de rï¿½flection sont sur le mur:
-                if(verifyIntersection(lineRay,lineWalli) && verifyIntersection(lineRay,lineWallj))
+                if(verifyIntersection(lineRay,lineWalli) && verifyIntersection(lineRay,lineWallj) && inter)
                     reflectedRayij.x2 = intersectioni(1);
                     reflectedRayij.y2 = intersectioni(2);
                     reflectedRayij.x3 = intersectionj(1);
