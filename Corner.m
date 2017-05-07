@@ -6,6 +6,7 @@ classdef Corner
         y1 %Ordonn�e extr�mit� 1   
         perm %Permitivit� relative
         cond %Conductivit�
+        eps2
     end
     
     properties (Constant = true) %Constantes utiles dans les calculs
@@ -28,14 +29,14 @@ classdef Corner
         %Renvoie le coefficient de diffraction au travers du mur
         function D = getDiffraction(obj,thetai)
             phip = thetai; % Angle d'incidence
-            phi = ; % Angle de refraction
-            delta = pi - (phip-phi);
-            sp = ; % Distance à la source
-            s = ; % Dista,ce au recepteur
-            L = s*sp/(s+sp);
+            %phi = 0; % Angle de refraction
+            %delta = pi - (phip-phi);
+            %sp = 0; % Distance à la source
+            %s = 0; % Dista,ce au recepteur
+            %L = s*sp/(s+sp);
             %Calcul du coefficient de transmission par 8.79:
-            ft = obj.FT(2*obj.beta*L*(sin(delta/2))^2;
-            D = -(exp(-i*pi/4)/(2*sqrt(2*pi*obj.beta*L)))*(ft/sin(delta/2));
+            %ft = obj.FT(2*obj.beta*L*(sin(delta/2))^2);
+            %D = -(exp(-i*pi/4)/(2*sqrt(2*pi*obj.beta*L)))*(ft/sin(delta/2));
         end
         
         function ft = FT(obj,x)

@@ -1,5 +1,7 @@
 %Ceci est le script principal dans lequel est effectu�e la simulation
 
+clear all; close all;
+
 %Initialisation des constantes:
 
 epsMur = 5; %Permitivit� relative des murs (en b�ton)
@@ -31,10 +33,24 @@ for i = 1:numel(wallList)
     wallList(i).plot();
 end
 
+%Création d'une liste de coins
+ 
+corner1 = Corner(0,0,epsMur,sigmaMur);
+corner2 = Corner(0,L/2,epsMur,sigmaMur);
+corner3 = Corner(0,L,epsMur,sigmaMur);
+corner4 = Corner(2*L/3,0,epsMur,sigmaMur);
+corner5 = Corner(L,0,epsMur,sigmaMur);
+corner6 = Corner(L,L/2,epsMur,sigmaMur);
+corner7 = Corner(L,L,epsMur,sigmaMur);
+corner8 = Corner(2*L/3,L/2,epsMur,sigmaMur);
+corner9 = Corner(2*L/3,5*L/6,epsMur,sigmaMur);
+ 
+cornerList = [corner1,corner2,corner3,corner4,corner5,corner6,corner7,corner8,corner9];
+
 %Construction des objets antenne de l'environement
 
 stationBase = Antenne(10,10,lambda);
-recepteur = Antenne(40,40,lambda);
+recepteur = Antenne(20,20,lambda);
 P = 0; %Puissance arrivant au r�cepteur
 E = 0; %Champ arrivant au r�cepteur
 
@@ -156,7 +172,7 @@ for i = 1:(numel(wallList)) %Pour chaque mur:
   
   
    %Affichage rayon:
-  reflectedRayi.plot();
+  %reflectedRayi.plot();
   vectRay1 = [reflectedRayi.x2-xd1 reflectedRayi.y2-yd1]/sqrt((xd1-reflectedRayi.x2)^2 + (yd1-reflectedRayi.y2)^2);
   theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement Ã  l'antenne
   G = stationBase.getGain(theta); %Gain dans la direction considÃ©rÃ©e
@@ -274,7 +290,7 @@ for i = 1:(numel(wallList)) %Pour chaque couple de mur:
  
  
                    %Affichage rayon:
-                   reflectedRayij.plot();
+                   %reflectedRayij.plot();
                    vectRay1 = [reflectedRayij.x2-xd1 reflectedRayij.y2-yd1]/sqrt((xd1-reflectedRayij.x2)^2 + (yd1-reflectedRayij.y2)^2);
                    theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement Ãƒ  l'antenne
                    G = stationBase.getGain(theta); %Gain dans la direction considÃƒÂ©rÃƒÂ©e
@@ -283,6 +299,80 @@ for i = 1:(numel(wallList)) %Pour chaque couple de mur:
       end
 end
 
+%4) Calcul de la diffraction
+ 
+for i = 1:(numel(cornerList))
+   corneri = cornerList(i);
+  
+   diffractedRayi = Rayon(3);
+   diffractedRayi.x1 = xd1;
+   diffractedRayi.y1 = yd1;
+   diffractedRayi.x3 = xd2;
+   diffractedRayi.y3 = yd2;
+  
+   nodiffraction = false;
+   for j = 1:numel(wallList)
+           wallj = wallList(j);
+           %Segment de droite associÃ¯Â¿Â½ au mur:
+           lineWall = wallj.getLine();
+     
+           %Segment de droite associÃ© aux deux morceaux du rayon
+           lineRay1 = [xd1 yd1; corneri.x1 corneri.y1];
+           lineRay2 = [corneri.x1 corneri.y1; xd2 yd2];
+     
+           %Le rayon intersecte-t-il les murs? Si oui on ne doit pas en
+           %tenir compte car la diffraction est trop forte
+          
+           intersectioni = getIntersection(lineRay1,lineWall);
+           intersectionj = getIntersection(lineRay2,lineWall);
+          
+           if (verifyIntersection(lineRay1,lineWall)) %Si le mur est rencontrÃ¯Â¿Â½, compatbiliser attÃ¯Â¿Â½nuation:
+               if ( intersectioni(1) == corneri.x1)
+                   if ( intersectioni(2) == corneri.y1)
+                        nodiffraction = false;
+                   else
+                       nodiffraction = true;
+                       break;
+                   end
+               else
+                    nodiffraction = true;
+                    break;
+               end
+           end
+           if (verifyIntersection(lineRay2,lineWall)) %Si le mur est rencontrÃ¯Â¿Â½, compatbiliser attÃ¯Â¿Â½nuation:
+               if ( intersectionj(1) == corneri.x1)
+                   if ( intersectionj(2) == corneri.y1)
+                        nodiffraction = false;
+                   else
+                       nodiffraction = true;
+                       break;
+                   end
+               else
+                    nodiffraction = true;
+                    break;
+               end
+           end
+   end
+  
+   if (nodiffraction)
+       diffractedRayi.x2 = 1/0;
+       diffractedRayi.y2 = 1/0;
+       diffractedRayi.At = 0;
+   else
+       diffractedRayi.x2 = corneri.x1;
+       diffractedRayi.y2 = corneri.y1;
+      
+       %thetai = 0;
+       %diffractedRayi.At = diffractedRayi.At * corneri.getDiffraction(thetai);
+      
+       vectRay1 = [diffractedRayi.x2-xd1 diffractedRayi.y2-yd1]/sqrt((xd1-diffractedRayi.x2)^2 + (yd1-diffractedRayi.y2)^2);
+       theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement ï¿½ l'antenne
+       G = stationBase.getGain(theta); %Gain dans la direction considï¿½rï¿½e
+       E = E + diffractedRayi.getE(G); %Calcul du champ arrivant au rï¿½cepteur;
+       diffractedRayi.plot();
+   end   
+     
+end
 
 %Affichage des antennes:
 
