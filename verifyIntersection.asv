@@ -1,5 +1,5 @@
 function [ doIntersect ] = verifyIntersection( line1, line2 )
-%Ce script vérifie que les segments droites données ont bien une
+%Ce script verifie que les segments droites donnes ont bien une
 %intersection. Il renvoie true dans l'affirmative
 %Algorithme issus de:
 % http://blogs.mathworks.com/loren/2011/08/29/intersecting-lines/

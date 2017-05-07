@@ -1,16 +1,16 @@
 classdef Wall
-    %Cette classe contient les propri�t�s des murs de l'environement
+    %Cette classe contient les proprietes des murs de l'environement
 
-    properties %Propri�t�s variables du mur
-        x1 %Abscisse extr�mit� 1
-        y1 %Ordonn�e extr�mit� 1
-        x2 %Abscisse extr�mit� 2
-        y2 %Ordonn�e extremit� 2    
-        perm %Permitivit� relative
-        cond %Conductivit�
+    properties %Proprietes variables du mur
+        x1 %Abscisse extremite 1
+        y1 %Ordonnee extremite 1
+        x2 %Abscisse extremite 2
+        y2 %Ordonnee extremite 2    
+        perm %Permitivite relative
+        cond %Conductivite
         ep %Epaisseur
-        eps2; %Permitivit� mur
-        Z2 ; %Imp�dance mur
+        eps2; %Permitivite mur
+        Z2 ; %Impedance mur
         betam ; %Norme du vecteur d'onde dans le mur
     end
     
@@ -18,7 +18,7 @@ classdef Wall
         mu0 = 4*pi*10^-7;
         eps0 = 10^-9 / (36*pi);  
         beta = 2*pi*(2.45*10^9)*sqrt(4*pi*10^-7 *10^-9 / (36*pi)); %Norme du vecteur d'onde dans le vide
-        Z1 = sqrt((10^-9 / (36*pi))/(4*pi*10^-7)); %Imp�dance vide
+        Z1 = sqrt((10^-9 / (36*pi))/(4*pi*10^-7)); %Impedance vide
     end
     
     methods
@@ -47,7 +47,7 @@ classdef Wall
         function T = getTransmission(obj,thetai)
             thetat = asin(sqrt(1/obj.perm)*sin(thetai)); %Angle de transmission 
             gammap = (obj.Z2*cos(thetai) - obj.Z1*cos(thetat))/...
-                (obj.Z2*cos(thetai)+obj.Z1*cos(thetat)); %Coefficient de r�flection normal
+                (obj.Z2*cos(thetai)+obj.Z1*cos(thetat)); %Coefficient de reflexion normal
             s = obj.ep/cos(thetat); %Distance parcourue dans le mur
             %Calcul du coefficient de transmission par 8.44:
             T = (exp(-i*(obj.betam*s))*(1 - gammap^2))/... 

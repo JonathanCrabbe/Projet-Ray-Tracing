@@ -1,11 +1,11 @@
 classdef Antenne
-    %Cette classe contient les propriétés des antennes qui sont
-    %des dipôles lambda/2 par hypothèse
+    %Cette classe contient les proprietes des antennes qui sont
+    %des dipoles lambda/2 par hypothese
 
     properties
         x %Abscisse de l'origine de l'antenne
-        y %Ordonnée de l'origine de l'antenne
-        lambda %Longueur d'onde rayonnée ou reçue
+        y %Ordonnee de l'origine de l'antenne
+        lambda %Longueur d'onde rayonnee ou recue
         Ia = sqrt(2*0.1/73); %Courant parcouru par l'antenne si elle rayonne
         etha = 1; %Rendement de l'antenne
            
@@ -19,7 +19,7 @@ classdef Antenne
             obj.lambda = lambda;
         end
         
-        %Aficchage de l'antenne:
+        %Affichage de l'antenne:
         function plot(obj)
             plot([obj.x ,obj.x],...
             [obj.y - (obj.lambda)/4,obj.y + (obj.lambda)/4], '*m');

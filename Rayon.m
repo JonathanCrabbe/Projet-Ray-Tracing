@@ -1,15 +1,15 @@
 classdef Rayon
-    %Cette classe contient les propri�t�s des faisceaux
+    %Cette classe contient les proprietes des faisceaux
     
 
     properties
       
        
-        At = 1;%Att�nuation totale accumul�e par le rayon lors de ses interactions
-        Pem = 0.1; %La puissance rayonn�e par l'�metteur est de 0,1W (20 dBm)
+        At = 1;%Attenuation totale accumulee par le rayon lors de ses interactions
+        Pem = 0.1; %La puissance rayonnee par l'emetteur est de 0,1W (20 dBm)
         numPoints = 0; %Nombre de points du du graphe du rayon
         
-        %Coordonn�es des points d�finissant le graphe du rayon (au maximum
+        %Coordonnees des points definissant le graphe du rayon (au maximum
         %4)
         x1 = 0;
         y1 = 0;
@@ -38,7 +38,7 @@ classdef Rayon
             end
         end
         
-        %Calcul du champ arrivant au r�cepteur:
+        %Calcul du champ arrivant au recepteur:
         function E = getE(obj,G)
            if (obj.At == 0)
                E = 0;

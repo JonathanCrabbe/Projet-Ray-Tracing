@@ -1,5 +1,5 @@
 function [ doIntersect ] = verifyIntersection( line1, line2 )
-%Ce script vérifie que les segments droites données ont bien une
+%Ce script verifie que les segments droites donnes ont bien une
 %intersection. Il renvoie true dans l'affirmative
 %Algorithme issus de:
 % http://blogs.mathworks.com/loren/2011/08/29/intersecting-lines/
@@ -24,13 +24,13 @@ elseif(line1(2,1) == line1(1,1)) %Droite 1 verticale
      xint = line1(1,1);
      yint = b2+m2*xint;
      doIntersect = isPointInside(xint, line2) && ... %Abscisce dans la droite 2
-    (yint >= line1(1,2) && yint <= line1(2,2)) ; %Ordonnée dans la droite 1
+    (yint >= line1(1,2) && yint <= line1(2,2)) ; %Ordonnee dans la droite 1
 
 elseif(line2(2,1) == line2(1,1)) %Droite 2 verticale
     xint = line2(1,1);
     yint = b1+m1*xint;
     doIntersect = isPointInside(xint, line1) && ... %Abscisce dans la droite 2
-   (yint >= line2(1,2) && yint <= line2(2,2)) ; %Ordonnée dans la droite 1
+   (yint >= line2(1,2) && yint <= line2(2,2)) ; %Ordonnee dans la droite 1
    
     
 else

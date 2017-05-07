@@ -1,11 +1,11 @@
 classdef Corner
-    %Cette classe contient les propri�t�s des coins de l'environement
+    %Cette classe contient les proprietes des coins de l'environement
 
-    properties %Propri�t�s variables du mur
-        x1 %Abscisse extr�mit� 1
-        y1 %Ordonn�e extr�mit� 1   
-        perm %Permitivit� relative
-        cond %Conductivit�
+    properties %Proprietes variables du mur
+        x1 %Abscisse extremite 1
+        y1 %Ordonnee extremite 1   
+        perm %Permitivite relative
+        cond %Conductivite
         eps2
     end
     
@@ -13,7 +13,7 @@ classdef Corner
         mu0 = 4*pi*10^-7;
         eps0 = 10^-9 / (36*pi);  
         beta = 2*pi*(2.45*10^9)*sqrt(4*pi*10^-7 *10^-9 / (36*pi)); %Norme du vecteur d'onde dans le vide
-        Z1 = sqrt((10^-9 / (36*pi))/(4*pi*10^-7)); %Imp�dance vide
+        Z1 = sqrt((10^-9 / (36*pi))/(4*pi*10^-7)); %Impedance vide
     end
     
     methods
