@@ -221,18 +221,21 @@ for i = 1:(numel(wallList)) %Pour chaque couple de mur:
                 intersectioni = getIntersection(lineWalli,lineRay);
                 intersectionj = getIntersection(lineWallj,lineRay);
                 
+                %V�rification que ce point n'est pas associ� � un coin
+                
                 if (intersectioni(1) == intersectionj(1))
                     if (intersectioni(2) == intersectionj(2))
-                        inter = false;
+                        %Cas pathologique du coin:
+                        noCorner = false;
                     else
-                        inter = true;
+                        noCorner = true;
                     end
                 else
-                    inter = true;
+                    noCorner = true;
                 end
  
-                %Vï¿½rification que les point de rï¿½flection sont sur le mur:
-                if(verifyIntersection(lineRay,lineWalli) && verifyIntersection(lineRay,lineWallj) && inter)
+                %Verification que les point de reflection sont sur le mur et ne correspondent pas � un coin:
+                if(verifyIntersection(lineRay,lineWalli) && verifyIntersection(lineRay,lineWallj) && noCorner)
                     reflectedRayij.x2 = intersectioni(1);
                     reflectedRayij.y2 = intersectioni(2);
                     reflectedRayij.x3 = intersectionj(1);
@@ -249,8 +252,8 @@ for i = 1:(numel(wallList)) %Pour chaque couple de mur:
                     reflectedRayij.At = reflectedRayij.At * wallj.getReflexion(thetai2);
                    
                     vectRay3 = [xd2-reflectedRayij.x3 yd2-reflectedRayij.y3]/sqrt((reflectedRayij.x3-xd2)^2 + (reflectedRayij.y3-yd2)^2);
+                    
                     % Calcul de l'atténuation due aux transmissions
-                   
                     for k = 1:numel(wallList)
                         wallk = wallList(k);
                          %Segment de droite associÃ¯Â¿Â½ au mur:
@@ -290,7 +293,7 @@ for i = 1:(numel(wallList)) %Pour chaque couple de mur:
  
  
                    %Affichage rayon:
-                   %reflectedRayij.plot();
+                   reflectedRayij.plot();
                    vectRay1 = [reflectedRayij.x2-xd1 reflectedRayij.y2-yd1]/sqrt((xd1-reflectedRayij.x2)^2 + (yd1-reflectedRayij.y2)^2);
                    theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement Ãƒ  l'antenne
                    G = stationBase.getGain(theta); %Gain dans la direction considÃƒÂ©rÃƒÂ©e
@@ -369,7 +372,7 @@ for i = 1:(numel(cornerList))
        theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement ï¿½ l'antenne
        G = stationBase.getGain(theta); %Gain dans la direction considï¿½rï¿½e
        E = E + diffractedRayi.getE(G); %Calcul du champ arrivant au rï¿½cepteur;
-       diffractedRayi.plot();
+       %diffractedRayi.plot();
    end   
      
 end
