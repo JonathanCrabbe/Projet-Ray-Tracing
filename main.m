@@ -7,7 +7,7 @@ clear all; close all;
 epsMur = 5; %Permitivite relative des murs (en beton)
 sigmaMur = 0.014; %Conductivite des murs (en beton)
 L = 50; %Longueur caracteristique du plan(m)
-e = 0.4; %Epaisseur mur (m)
+e = 0.3; %Epaisseur mur (m)
 c = 299792458; %Vitesse de la lumiere dans le vide (m/s)
 f = 2.45*10^9; %Frequence des communications (Hertz) 
 lambda = c/f; %Longueur d'onde rayonnee (m)
@@ -17,15 +17,23 @@ Pem = 0.1; %La puissance rayonnee par l'emetteur est de 0,1W (20 dBm)
 
 %Construction des objets murs de l'environement
 
-wall1 = Wall(0,0,0,L,epsMur, sigmaMur,e); 
-wall2 = Wall(0,0,L,0,epsMur, sigmaMur,e); 
-wall3 = Wall(L,0,L,L,epsMur, sigmaMur,e); 
-wall4 = Wall(0,L,L,L,epsMur, sigmaMur,e); 
-wall5 = Wall(0,L/2,L,L/2,epsMur, sigmaMur,e);
-wall6 = Wall(2*L/3,0,2*L/3,5*L/6,epsMur, sigmaMur,e);
+wall1 = Wall(0,0,0,10.93,epsMur, sigmaMur,0.2); 
+wall2 = Wall(0,0,7,0,epsMur, sigmaMur,0.29); 
+wall3 = Wall(7,0,7,10.93,epsMur, sigmaMur,0.2); 
+wall4 = Wall(0,10.93,7,10.93,epsMur, sigmaMur,0.5); 
+wall5 = Wall(0,8.36,2.5,8.36,epsMur, sigmaMur,0.1);
+wall6 = Wall(2.5,8.76,2.5,7.29,epsMur, sigmaMur,0.18);
+wall7 = Wall(0,6.16,3.32,6.16,epsMur, sigmaMur,0.1);
+wall8 = Wall(0,3.56,1,3.56,epsMur, sigmaMur,0.33);
+wall9 = Wall(3.32,3.56,3.32,4.36,epsMur, sigmaMur,0.3);
+wall10 = Wall(3.32,5.06,3.32,6.16,epsMur, sigmaMur,0.3);
+wall11 = Wall(6.72,6.75,6.72,7.75,epsMur, sigmaMur,0.28);
+wall12 = Wall(6.55,3.56,7,3.56,epsMur, sigmaMur,0.33);
+wall13 = Wall(3.32,3.56,3.82,3.56,epsMur, sigmaMur,0.34);
+wall14 = Wall(1,1.2,1,3.56,epsMur, sigmaMur,0.18);
 
 %Creation d'un liste contenant les murs: 
-wallList = [wall1, wall2, wall3, wall4, wall5, wall6];
+wallList = [wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall10, wall11, wall12, wall13, wall14];
 
 %Affichage des murs:
 
@@ -33,7 +41,7 @@ for i = 1:numel(wallList)
     wallList(i).plot();
 end
 
-%Création d'une liste de coins
+%Cr??ation d'une liste de coins
  
 corner1 = Corner(0,0,epsMur,sigmaMur);
 corner2 = Corner(0,L/2,epsMur,sigmaMur);
@@ -49,8 +57,8 @@ cornerList = [corner1,corner2,corner3,corner4,corner5,corner6,corner7,corner8,co
 
 %Construction des objets antenne de l'environement
 
-stationBase = Antenne(10,10,lambda);
-recepteur = Antenne(20,20,lambda);
+stationBase = Antenne(2,8.66,lambda);
+recepteur = Antenne(5,2.5,lambda);
 P = 0; %Puissance arrivant au recepteur
 E = 0; %Champ arrivant au recepteur
 
@@ -133,7 +141,7 @@ for i = 1:(numel(wallList)) %Pour chaque mur:
        reflectedRayi.x2 = intersectioni(1);
        reflectedRayi.y2 = intersectioni(2);
        
-       % Coefficient de réflexion
+       % Coefficient de r??flexion
        
        vectRay1 = [reflectedRayi.x2-xd1 reflectedRayi.y2-yd1]/sqrt((xd1-reflectedRayi.x2)^2 + (yd1-reflectedRayi.y2)^2);
        thetai = acos(abs(dot(vectRay1,wallVecti))); %Angle d'incidence
@@ -144,7 +152,7 @@ for i = 1:(numel(wallList)) %Pour chaque mur:
            %Segment de droite associe au mur:
            lineWall = wallj.getLine();
       
-           %Segment de droite associé aux deux morceaux du rayon
+           %Segment de droite associ?? aux deux morceaux du rayon
            lineRay1 = [xd1 yd1; reflectedRayi.x2 reflectedRayi.y2];
            lineRay2 = [reflectedRayi.x2 reflectedRayi.y2; xd2 yd2];
       
@@ -253,7 +261,7 @@ for i = 1:(numel(wallList)) %Pour chaque couple de mur:
                    
                     vectRay3 = [xd2-reflectedRayij.x3 yd2-reflectedRayij.y3]/sqrt((reflectedRayij.x3-xd2)^2 + (reflectedRayij.y3-yd2)^2);
                     
-                    % Calcul de l'atténuation due aux transmissions
+                    % Calcul de l'att??nuation due aux transmissions
                     for k = 1:numel(wallList)
                         wallk = wallList(k);
                          %Segment de droite associe au mur:
