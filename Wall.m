@@ -39,7 +39,7 @@ classdef Wall
         
         %Affiche le mur dans l'environement 
         function plot(obj)
-            plot([obj.x1,obj.x2], [obj.y1,obj.y2], 'Color', 'b');
+            plot([obj.x1,obj.x2], [obj.y1,obj.y2], 'Color', 'r', 'LineWidth', 1);
             hold on;
         end
         

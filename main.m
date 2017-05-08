@@ -199,8 +199,16 @@ for x = 0:0.5:6.5
                        reflectedRayi.At = reflectedRayi.At * wallj.getTransmission(thetai); %Attenuation
                    end
                end
-
-           else % Rayon pas valable car il n'intersecte pas le mur
+          %Pour un rayon valable, on ajoute la puissance au recepteur:     
+          vectRay1 = [reflectedRayi.x2-xd1 reflectedRayi.y2-yd1]/sqrt((xd1-reflectedRayi.x2)^2 + (yd1-reflectedRayi.y2)^2);
+          theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement a l'antenne
+          G = stationBase.getGain(theta); %Gain dans la direction consideree
+          E =  reflectedRayi.getE(G); %Calcul du champ arrivant au recepteur
+          thetam = acos(abs(dot(reflectedRayi.getLastVect,[0 1]))); %Angle d'arrivée à l'antenne
+          he = recepteur.getHauteur(thetam); %Hauteur équivalente de l'antenne
+          PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne reçue
+          
+          else % Rayon pas valable car il n'intersecte pas le mur
                reflectedRayi.x2 = 1/0;
                reflectedRayi.y2 = 1/0;
                reflectedRayi.At = 0;
@@ -210,13 +218,7 @@ for x = 0:0.5:6.5
            %Affichage rayon:
            
           %reflectedRayi.plot();
-          vectRay1 = [reflectedRayi.x2-xd1 reflectedRayi.y2-yd1]/sqrt((xd1-reflectedRayi.x2)^2 + (yd1-reflectedRayi.y2)^2);
-          theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement a l'antenne
-          G = stationBase.getGain(theta); %Gain dans la direction consideree
-          E =  reflectedRayi.getE(G); %Calcul du champ arrivant au recepteur
-          thetam = acos(abs(dot(reflectedRayi.getLastVect,[0 1]))); %Angle d'arrivée à l'antenne
-          he = recepteur.getHauteur(thetam); %Hauteur équivalente de l'antenne
-          PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne reçue
+          
         end
 
         %3) Calcul des reflexions doubles
@@ -321,7 +323,17 @@ for x = 0:0.5:6.5
                                     reflectedRayij.At = reflectedRayij.At * wallk.getTransmission(thetai); %Attenuation
                                  end
                             end
-
+                           %Pour un rayon valable, on ajoute la
+                           %contribution en puissance:
+                           vectRay1 = [reflectedRayij.x2-xd1 ...
+                               reflectedRayij.y2-yd1]/sqrt((xd1-reflectedRayij.x2)^2 + ...
+                               (yd1-reflectedRayij.y2)^2);
+                           theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement a l'antenne
+                           G = stationBase.getGain(theta); %Gain dans la direction consideree
+                           E =  reflectedRayij.getE(G); %Calcul du champ arrivant au recepteur
+                           thetam = acos(abs(dot(reflectedRayij.getLastVect,[0 1]))); %Angle d'arrivée à l'antenne
+                           he = recepteur.getHauteur(thetam); %Hauteur équivalente de l'antenne
+                           PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne reçue
 
                         else
                             reflectedRayij.x2 = 1/0;
@@ -336,15 +348,7 @@ for x = 0:0.5:6.5
                            
                            %reflectedRayij.plot();
                            
-                           vectRay1 = [reflectedRayij.x2-xd1 ...
-                               reflectedRayij.y2-yd1]/sqrt((xd1-reflectedRayij.x2)^2 + ...
-                               (yd1-reflectedRayij.y2)^2);
-                           theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement a l'antenne
-                           G = stationBase.getGain(theta); %Gain dans la direction consideree
-                           E =  reflectedRayij.getE(G); %Calcul du champ arrivant au recepteur
-                           thetam = acos(abs(dot(reflectedRayij.getLastVect,[0 1]))); %Angle d'arrivée à l'antenne
-                           he = recepteur.getHauteur(thetam); %Hauteur équivalente de l'antenne
-                           PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne reçue
+                           
                   end
               end
         end
@@ -446,6 +450,6 @@ end
 powerDistributionX = 0:0.5:6.5;
 powerDistributionY = 0:0.5:10.5;
 surf(powerDistributionX,powerDistributionY,powerDistributionZ');
-
+colorbar;
 
 
