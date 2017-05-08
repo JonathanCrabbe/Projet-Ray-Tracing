@@ -454,6 +454,6 @@ colorbar;
 title('Distribution de la puissance de réception en fonction de la position du récepteur');
 xlabel('Abscisse (m)');
 ylabel('Ordonnée (m)');
-text(stationBase.x, stationBase.y, '\leftarrow Station de base', 'Color', 'white');
+text(stationBase.x, stationBase.y, '\leftarrow Station de base');
 
 
