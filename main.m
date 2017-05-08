@@ -442,7 +442,7 @@ end
 
 
 
-%stationBase.plot();
+stationBase.plot();
 %recepteur.plot();
 
 %Affichage de la distribution de puissance:
@@ -451,5 +451,9 @@ powerDistributionX = 0:0.5:6.5;
 powerDistributionY = 0:0.5:10.5;
 surf(powerDistributionX,powerDistributionY,powerDistributionZ');
 colorbar;
+title('Distribution de la puissance de réception en fonction de la position du récepteur');
+xlabel('Abscisse (m)');
+ylabel('Ordonnée (m)');
+text(stationBase.x, stationBase.y, '\leftarrow Station de base', 'Color', 'white');
 
 
