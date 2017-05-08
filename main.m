@@ -32,7 +32,7 @@ wall12 = Wall(6.55,3.56,7,3.56,epsMur, sigmaMur,0.33);
 wall13 = Wall(3.32,3.56,3.82,3.56,epsMur, sigmaMur,0.34);
 wall14 = Wall(1,1.2,1,3.56,epsMur, sigmaMur,0.18);
 
-%Creation d'un liste contenant les murs: 
+%Creation d'une liste contenant les murs: 
 wallList = [wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall10, wall11, wall12, wall13, wall14];
 
 %Affichage des murs:
@@ -41,20 +41,35 @@ for i = 1:numel(wallList)
     wallList(i).plot();
 end
 
-%Cr??ation d'une liste de coins
+%Creation d'une liste de coins
  
 corner1 = Corner(0,0,epsMur,sigmaMur);
-corner2 = Corner(0,L/2,epsMur,sigmaMur);
-corner3 = Corner(0,L,epsMur,sigmaMur);
-corner4 = Corner(2*L/3,0,epsMur,sigmaMur);
-corner5 = Corner(L,0,epsMur,sigmaMur);
-corner6 = Corner(L,L/2,epsMur,sigmaMur);
-corner7 = Corner(L,L,epsMur,sigmaMur);
-corner8 = Corner(2*L/3,L/2,epsMur,sigmaMur);
-corner9 = Corner(2*L/3,5*L/6,epsMur,sigmaMur);
- 
-cornerList = [corner1,corner2,corner3,corner4,corner5,corner6,corner7,corner8,corner9];
+corner2 = Corner(0,10.93,epsMur,sigmaMur);
+corner3 = Corner(7,10.93,epsMur,sigmaMur);
+corner4 = Corner(7,0,epsMur,sigmaMur);
+corner5 = Corner(0,8.36,epsMur,sigmaMur);
+corner6 = Corner(2.5,8.76,epsMur,sigmaMur);
+corner7 = Corner(2.5,7.29,epsMur,sigmaMur);
+corner8 = Corner(2.5,8.36,epsMur,sigmaMur);
+corner9 = Corner(0,6.16,epsMur,sigmaMur);
+corner10 = Corner(6.72,6.75,epsMur,sigmaMur);
+corner11 = Corner(6.72,7.75,epsMur,sigmaMur);
+corner12 = Corner(6.55,3.56,epsMur,sigmaMur);
+corner13 = Corner(7,3.56,epsMur,sigmaMur);
+corner14= Corner(3.32,5.06,epsMur,sigmaMur);
+corner15 = Corner(3.32,3.56,epsMur,sigmaMur);
+corner16 = Corner(3.32,4.36,epsMur,sigmaMur);
+corner17 = Corner(3.32,6.16,epsMur,sigmaMur);
+corner18 = Corner(1,1.2,epsMur,sigmaMur);
+corner19 = Corner(1,3.56,epsMur,sigmaMur);
+corner20 = Corner(0,3.56,epsMur,sigmaMur);
+corner21 = Corner(3.82,3.56,epsMur,sigmaMur);
 
+cornerList = [corner1,corner2,corner3,corner4,corner5,corner6,corner7,corner8,corner9,corner10,corner11,corner12,corner13,corner14,corner15,corner16,corner17,corner18,corner19,corner20,corner21];
+
+for i = 1:numel(cornerList)
+    %cornerList(i).plot();
+end
 %Construction des objets antenne de l'environement
 
 stationBase = Antenne(2,8.66,lambda);
@@ -130,7 +145,7 @@ for i = 1:(numel(wallList)) %Pour chaque mur:
    %Coordonnees Antenne miroire:
    xam = 2*intersectioni(1)-xd1;
    yam = 2*intersectioni(2)-yd1;
-   plot( xam,yam, '*r'); hold on;
+   %plot( xam,yam, '*r'); hold on;
    
    %Point de reflexion theorique:
     lineRay = [xam yam; xd2 yd2 ];
@@ -152,7 +167,7 @@ for i = 1:(numel(wallList)) %Pour chaque mur:
            %Segment de droite associe au mur:
            lineWall = wallj.getLine();
       
-           %Segment de droite associ?? aux deux morceaux du rayon
+           %Segment de droite associe aux deux morceaux du rayon
            lineRay1 = [xd1 yd1; reflectedRayi.x2 reflectedRayi.y2];
            lineRay2 = [reflectedRayi.x2 reflectedRayi.y2; xd2 yd2];
       
@@ -180,7 +195,7 @@ for i = 1:(numel(wallList)) %Pour chaque mur:
   
   
    %Affichage rayon:
-  %reflectedRayi.plot();
+  reflectedRayi.plot();
   vectRay1 = [reflectedRayi.x2-xd1 reflectedRayi.y2-yd1]/sqrt((xd1-reflectedRayi.x2)^2 + (yd1-reflectedRayi.y2)^2);
   theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement a l'antenne
   G = stationBase.getGain(theta); %Gain dans la direction consideree
@@ -221,8 +236,8 @@ for i = 1:(numel(wallList)) %Pour chaque couple de mur:
                 xamj = 2*intersectionj(1)-xd2;
                 yamj = 2*intersectionj(2)-yd2;
  
-                plot( xami,yami, '*c'); hold on;
-                plot( xamj,yamj, '*c'); hold on;
+                %plot( xami,yami, '*c'); hold on;
+                %plot( xamj,yamj, '*c'); hold on;
  
                 %Points de reflexion theorique:
                 lineRay = [xami yami; xamj yamj ];
@@ -261,7 +276,7 @@ for i = 1:(numel(wallList)) %Pour chaque couple de mur:
                    
                     vectRay3 = [xd2-reflectedRayij.x3 yd2-reflectedRayij.y3]/sqrt((reflectedRayij.x3-xd2)^2 + (reflectedRayij.y3-yd2)^2);
                     
-                    % Calcul de l'att??nuation due aux transmissions
+                    % Calcul de l'attenuation due aux transmissions
                     for k = 1:numel(wallList)
                         wallk = wallList(k);
                          %Segment de droite associe au mur:
@@ -380,7 +395,7 @@ for i = 1:(numel(cornerList))
        theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement a l'antenne
        G = stationBase.getGain(theta); %Gain dans la direction consideree
        E = E + diffractedRayi.getE(G); %Calcul du champ arrivant au recepteur;
-       %diffractedRayi.plot();
+       diffractedRayi.plot();
    end   
      
 end

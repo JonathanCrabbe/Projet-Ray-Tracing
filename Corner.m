@@ -31,12 +31,18 @@ classdef Corner
             phip = thetai; % Angle d'incidence
             %phi = 0; % Angle de refraction
             %delta = pi - (phip-phi);
-            %sp = 0; % Distance à la source
+            %sp = 0; % Distance ?? la source
             %s = 0; % Dista,ce au recepteur
             %L = s*sp/(s+sp);
             %Calcul du coefficient de transmission par 8.79:
             %ft = obj.FT(2*obj.beta*L*(sin(delta/2))^2);
             %D = -(exp(-i*pi/4)/(2*sqrt(2*pi*obj.beta*L)))*(ft/sin(delta/2));
+        end
+        
+         %Affichage de l'antenne:
+        function plot(obj)
+            plot(obj.x1 ,obj.y1,'*r');
+            hold on;
         end
         
         function ft = FT(obj,x)
