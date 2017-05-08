@@ -1,5 +1,4 @@
 %Ceci est le script principal dans lequel est effectuee la simulation
-%qui affiche la distribution de puissance
 
 clear all; close all;
 
@@ -74,9 +73,10 @@ end
 %Construction de la station de base
 
 stationBase = Antenne(2,8.66,lambda);
+recepteurList = []; %Liste des antennes receptrices
 powerDistributionZ = []; %Puissance recue en (X,Y)
 
-%Application de l'algorithme de Ray Tracing à differents recepteurs:
+%Application de l'algorithme de Ray Tracing à differents récepteurs:
 
 xi = 1; %Indice abscisce
 yi = 1; %Indice ordonnée
@@ -84,7 +84,6 @@ for x = 0:0.5:6.5
     for y = 0:0.5:10.5 
         recepteur = Antenne(x,y,lambda);
         E = 0; %Champ arrivant au recepteur
-        PRX = 0; %Puissance arrivant au recepteur
         
 
         %1) Calcul du rayon direct:
@@ -135,7 +134,7 @@ for x = 0:0.5:6.5
         E = directRay.getE(G); %Calcul du champ arrivant au recepteur;
         thetam = acos(abs(dot(directRay.getLastVect,[0 1]))); %Angle d'arrivée à l'antenne
         he = recepteur.getHauteur(thetam); %Hauteur équivalente de l'antenne
-        PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra);%Puissance moyenne reçue
+        recepteur.PRX = recepteur.PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne reçue
 
         %2) Calcul des reflexions simples:
 
@@ -213,10 +212,10 @@ for x = 0:0.5:6.5
           vectRay1 = [reflectedRayi.x2-xd1 reflectedRayi.y2-yd1]/sqrt((xd1-reflectedRayi.x2)^2 + (yd1-reflectedRayi.y2)^2);
           theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement a l'antenne
           G = stationBase.getGain(theta); %Gain dans la direction consideree
-          E =  reflectedRayi.getE(G); %Calcul du champ arrivant au recepteur
+          E = E + reflectedRayi.getE(G); %Calcul du champ arrivant au recepteur
           thetam = acos(abs(dot(reflectedRayi.getLastVect,[0 1]))); %Angle d'arrivée à l'antenne
           he = recepteur.getHauteur(thetam); %Hauteur équivalente de l'antenne
-          PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne reçue
+          recepteur.PRX = recepteur.PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne reçue
         end
 
         %3) Calcul des reflexions doubles
@@ -341,10 +340,7 @@ for x = 0:0.5:6.5
                                (yd1-reflectedRayij.y2)^2);
                            theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement a l'antenne
                            G = stationBase.getGain(theta); %Gain dans la direction consideree
-                           E =  reflectedRayij.getE(G); %Calcul du champ arrivant au recepteur
-                           thetam = acos(abs(dot(reflectedRayij.getLastVect,[0 1]))); %Angle d'arrivée à l'antenne
-                           he = recepteur.getHauteur(thetam); %Hauteur équivalente de l'antenne
-                           PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne reçue
+                           E = E + reflectedRayij.getE(G); %Calcul du champ arrivant au recepteur
                   end
               end
         end
@@ -418,18 +414,14 @@ for x = 0:0.5:6.5
                vectRay1 = [diffractedRayi.x2-xd1 diffractedRayi.y2-yd1]/sqrt((xd1-diffractedRayi.x2)^2 + (yd1-diffractedRayi.y2)^2);
                theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement a l'antenne
                G = stationBase.getGain(theta); %Gain dans la direction consideree
-               E =  diffractedRayi.getE(G); %Calcul du champ arrivant au recepteur;
-               thetam = acos(abs(dot(diffractedRayi.getLastVect,[0 1]))); %Angle d'arrivée à l'antenne
-               he = recepteur.getHauteur(thetam); %Hauteur équivalente de l'antenne
-               PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne reçue
-               
+               E = E + diffractedRayi.getE(G); %Calcul du champ arrivant au recepteur;
                %diffractedRayi.plot();
            end   
 
         end
         
         
-        powerDistributionZ(xi,yi) = PRX;
+        powerDistributionZ(xi,yi) = abs(E);
         yi = yi+1; %Incrémentation indice ordonnée
     end
     xi = xi+1;

@@ -8,7 +8,7 @@ classdef Antenne
         lambda %Longueur d'onde rayonnee ou recue
         Ia = sqrt(2*0.1/73); %Courant parcouru par l'antenne si elle rayonne
         etha = 1; %Rendement de l'antenne
-        Ra = 73;  %Resistance d'antenne (ohm)
+        PRX; %Puissance reçue par l'antenne
            
     end
     
@@ -34,7 +34,7 @@ classdef Antenne
         
         %Calcule la hauteur équivalente de l'antenne dans la direction theta (formule 5.42):
         function h = getHauteur(obj,theta)
-            h = (obj.lambda * cos(pi/2 * cos(theta)))/(pi*(sin(theta))^2);
+            h = (obj.lambda * cos(pi/2 * cos(theta)))/(pi*);
         end
         
     end 
