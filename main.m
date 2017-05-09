@@ -16,7 +16,7 @@ Pem = 0.1; %La puissance rayonnee par l'emetteur est de 0,1W (20 dBm)
 
 
 
-%Construction des objets murs de l'environement(distances en mètres)
+%Construction des objets murs de l'environement(distances en mï¿½tres)
 
 wall1 = Wall(0,0,0,10.93,epsMur, sigmaMur,0.2); 
 wall2 = Wall(0,0,7,0,epsMur, sigmaMur,0.29); 
@@ -74,10 +74,10 @@ end
 stationBase = Antenne(2,8.66,lambda);
 powerDistributionZ = []; %Puissance recue en (X,Y)
 
-%Application de l'algorithme de Ray Tracing à differents recepteurs:
+%Application de l'algorithme de Ray Tracing ï¿½ differents recepteurs:
 
 xi = 1; %Indice abscisce
-yi = 1; %Indice ordonnée
+yi = 1; %Indice ordonnï¿½e
 for x = 0:0.5:6.5
     for y = 0:0.5:10.5 
         recepteur = Antenne(x,y,lambda);
@@ -128,12 +128,12 @@ for x = 0:0.5:6.5
             end 
 
         end
-        theta = acos(abs(dot(vectRay,[0 1]))); %Angle relativement a l'antenne émétrice
+        theta = acos(abs(dot(vectRay,[0 1]))); %Angle relativement a l'antenne ï¿½mï¿½trice
         G = stationBase.getGain(theta); %Gain dans la direction consideree
         E = directRay.getE(G); %Calcul du champ arrivant au recepteur;
-        thetam = acos(abs(dot(directRay.getLastVect,[0 1]))); %Angle d'arrivée à l'antenne
-        he = recepteur.getHauteur(thetam); %Hauteur équivalente de l'antenne
-        PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra);%Puissance moyenne reçue
+        thetam = acos(abs(dot(directRay.getLastVect,[0 1]))); %Angle d'arrivï¿½e ï¿½ l'antenne
+        he = recepteur.getHauteur(thetam); %Hauteur ï¿½quivalente de l'antenne
+        PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra);%Puissance moyenne reï¿½ue
 
         %2) Calcul des reflexions simples:
 
@@ -183,28 +183,47 @@ for x = 0:0.5:6.5
                    lineRay2 = [reflectedRayi.x2 reflectedRayi.y2; xd2 yd2];
 
                    %Le rayon intersecte-t-il les murs?
-
-                   if (verifyIntersection(lineRay1,lineWall)) %Si le mur est rencontre, compatbiliser attenuation:
-                       vectWall = wallj.getNormVect(); %Vecteur normal au mur norme
-                       vectRay1 = [reflectedRayi.x2-xd1 reflectedRayi.y2-yd1]/sqrt((xd1-reflectedRayi.x2)^2 + (yd1-reflectedRayi.y2)^2);
-                       thetai = acos(abs(dot(vectRay1,vectWall))); %Angle d'incidence
-                       reflectedRayi.At = reflectedRayi.At * wallj.getTransmission(thetai); %Attenuation
-                   end
-                   if (verifyIntersection(lineRay2,lineWall)) %Si le mur est rencontre, compatbiliser attenuation:
-                       vectWall = wallj.getNormVect(); %Vecteur normal au mur norme
-                       vectRay2 = [xd2-reflectedRayi.x2 yd2-reflectedRayi.y2]/sqrt((reflectedRayi.x2-xd2)^2 + (reflectedRayi.y2-yd2)^2);
-                       thetai = acos(abs(dot(vectRay2,vectWall))); %Angle d'incidence
-                       reflectedRayi.At = reflectedRayi.At * wallj.getTransmission(thetai); %Attenuation
-                   end
+                    if (verifyIntersection(lineRay1,lineWall)) %Si le mur est rencontre, compatbiliser attenuation:
+                        intersection = getIntersection(lineRay1,lineWall);
+                        if (intersection(1) == reflectedRayi.x2)
+                            if (intersection(2) ~= reflectedRayi.y2)     
+                                vectWall = wallj.getNormVect(); %Vecteur normal au mur norme
+                                vectRay1 = [reflectedRayi.x2-xd1 reflectedRayi.y2-yd1]/sqrt((xd1-reflectedRayi.x2)^2 + (yd1-reflectedRayi.y2)^2);
+                                thetai = acos(abs(dot(vectRay1,vectWall))); %Angle d'incidence
+                                reflectedRayi.At = reflectedRayi.At * wallj.getTransmission(thetai); %Attenuation
+                            end
+                        else
+                            vectWall = wallj.getNormVect(); %Vecteur normal au mur norme
+                            vectRay1 = [reflectedRayi.x2-xd1 reflectedRayi.y2-yd1]/sqrt((xd1-reflectedRayi.x2)^2 + (yd1-reflectedRayi.y2)^2);
+                            thetai = acos(abs(dot(vectRay1,vectWall))); %Angle d'incidence
+                            reflectedRayi.At = reflectedRayi.At * wallj.getTransmission(thetai); %Attenuation
+                        end
+                    end
+                    if (verifyIntersection(lineRay2,lineWall)) %Si le mur est rencontre, compatbiliser attenuation:
+                        intersection = getIntersection(lineRay2,lineWall);
+                        if (intersection(1) == reflectedRayi.x2)
+                            if (intersection(2) ~= reflectedRayi.y2)
+                                vectWall = wallj.getNormVect(); %Vecteur normal au mur norme
+                                vectRay2 = [xd2-reflectedRayi.x2 yd2-reflectedRayi.y2]/sqrt((reflectedRayi.x2-xd2)^2 + (reflectedRayi.y2-yd2)^2);
+                                thetai = acos(abs(dot(vectRay2,vectWall))); %Angle d'incidence
+                                reflectedRayi.At = reflectedRayi.At * wallj.getTransmission(thetai); %Attenuation
+                            end
+                        else
+                            vectWall = wallj.getNormVect(); %Vecteur normal au mur norme
+                            vectRay2 = [xd2-reflectedRayi.x2 yd2-reflectedRayi.y2]/sqrt((reflectedRayi.x2-xd2)^2 + (reflectedRayi.y2-yd2)^2);
+                            thetai = acos(abs(dot(vectRay2,vectWall))); %Angle d'incidence
+                            reflectedRayi.At = reflectedRayi.At * wallj.getTransmission(thetai); %Attenuation
+                        end
+                    end
                end
           %Pour un rayon valable, on ajoute la puissance au recepteur:     
           vectRay1 = [reflectedRayi.x2-xd1 reflectedRayi.y2-yd1]/sqrt((xd1-reflectedRayi.x2)^2 + (yd1-reflectedRayi.y2)^2);
           theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement a l'antenne
           G = stationBase.getGain(theta); %Gain dans la direction consideree
           E =  reflectedRayi.getE(G); %Calcul du champ arrivant au recepteur
-          thetam = acos(abs(dot(reflectedRayi.getLastVect,[0 1]))); %Angle d'arrivée à l'antenne
-          he = recepteur.getHauteur(thetam); %Hauteur équivalente de l'antenne
-          PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne reçue
+          thetam = acos(abs(dot(reflectedRayi.getLastVect,[0 1]))); %Angle d'arrivï¿½e ï¿½ l'antenne
+          he = recepteur.getHauteur(thetam); %Hauteur ï¿½quivalente de l'antenne
+          PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne reï¿½ue
           
           else % Rayon pas valable car il n'intersecte pas le mur
                reflectedRayi.x2 = 1/0;
@@ -306,20 +325,43 @@ for x = 0:0.5:6.5
                                     %Le rayon intersecte-t-il les murs?
 
                                  if (verifyIntersection(lineRay1,lineWall)) %Si le mur est rencontre, compatbiliser attenuation:
-                                    vectWall = wallk.getNormVect(); %Vecteur normal au mur norme
-                                    thetai = acos(abs(dot(vectRay1,vectWall))); %Angle d'incidence
-                                    reflectedRayij.At = reflectedRayij.At * wallk.getTransmission(thetai); %Attenuation
+                                    intersection = getIntersection(lineRay1,lineWall);
+                                    if (intersection(1) == reflectedRayij.x2)
+                                        if (intersection(2) ~= reflectedRayij.y2)
+                                            vectWall = wallk.getNormVect(); %Vecteur normal au mur norme
+                                            thetai = acos(abs(dot(vectRay1,vectWall))); %Angle d'incidence
+                                            reflectedRayij.At = reflectedRayij.At * wallk.getTransmission(thetai); %Attenuation
+                                        end
+                                    else
+                                        vectWall = wallk.getNormVect(); %Vecteur normal au mur norme
+                                        thetai = acos(abs(dot(vectRay1,vectWall))); %Angle d'incidence
+                                        reflectedRayij.At = reflectedRayij.At * wallk.getTransmission(thetai); %Attenuation
+                                    end
                                  end
-                                 if (verifyIntersection(lineRay2,lineWall)) %Si le mur est rencontre, compatbiliser attenuation:
-                                    vectWall = wallk.getNormVect(); %Vecteur normal au mur norme
-                                    thetai = acos(abs(dot(vectRay2,vectWall))); %Angle d'incidence
-                                    reflectedRayij.At = reflectedRayij.At * wallk.getTransmission(thetai); %Attenuation
-                                 end
-                                 if (verifyIntersection(lineRay3,lineWall)) %Si le mur est rencontre, compatbiliser attenuation:
-                                    vectWall = wallk.getNormVect(); %Vecteur normal au mur norme
-                                    thetai = acos(abs(dot(vectRay3,vectWall))); %Angle d'incidence
-                                    reflectedRayij.At = reflectedRayij.At * wallk.getTransmission(thetai); %Attenuation
-                                 end
+                                if (verifyIntersection(lineRay2,lineWall)) %Si le mur est rencontre, compatbiliser attenuation:
+                                    intersection = getIntersection(lineRay2,lineWall);
+                                    if (intersection(1) ~= reflectedRayij.x2 || intersection(2) ~= reflectedRayij.y2)
+                                        if (intersection(1) ~= reflectedRayij.x3 || intersection(2) ~= reflectedRayij.y3)
+                                            vectWall = wallk.getNormVect(); %Vecteur normal au mur norme
+                                            thetai = acos(abs(dot(vectRay2,vectWall))); %Angle d'incidence
+                                            reflectedRayij.At = reflectedRayij.At * wallk.getTransmission(thetai); %Attenuation
+                                        end
+                                    end
+                                end
+                                if (verifyIntersection(lineRay3,lineWall))%Si le mur est rencontre, compatbiliser attenuation:
+                                    intersection = getIntersection(lineRay3,lineWall);
+                                    if (intersection(1) == reflectedRayij.x3)
+                                        if (intersection(2) ~= reflectedRayij.y3)
+                                            vectWall = wallk.getNormVect(); %Vecteur normal au mur norme
+                                            thetai = acos(abs(dot(vectRay3,vectWall))); %Angle d'incidence
+                                            reflectedRayij.At = reflectedRayij.At * wallk.getTransmission(thetai); %Attenuation
+                                        end
+                                    else
+                                        vectWall = wallk.getNormVect(); %Vecteur normal au mur norme
+                                        thetai = acos(abs(dot(vectRay3,vectWall))); %Angle d'incidence
+                                        reflectedRayij.At = reflectedRayij.At * wallk.getTransmission(thetai); %Attenuation
+                                    end
+                                end
                             end
                            %Pour un rayon valable, on ajoute la
                            %contribution en puissance:
@@ -329,9 +371,9 @@ for x = 0:0.5:6.5
                            theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement a l'antenne
                            G = stationBase.getGain(theta); %Gain dans la direction consideree
                            E =  reflectedRayij.getE(G); %Calcul du champ arrivant au recepteur
-                           thetam = acos(abs(dot(reflectedRayij.getLastVect,[0 1]))); %Angle d'arrivée à l'antenne
-                           he = recepteur.getHauteur(thetam); %Hauteur équivalente de l'antenne
-                           PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne reçue
+                           thetam = acos(abs(dot(reflectedRayij.getLastVect,[0 1]))); %Angle d'arrivï¿½e ï¿½ l'antenne
+                           he = recepteur.getHauteur(thetam); %Hauteur ï¿½quivalente de l'antenne
+                           PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne reï¿½ue
 
                         else
                             reflectedRayij.x2 = 1/0;
@@ -421,9 +463,9 @@ for x = 0:0.5:6.5
                theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement a l'antenne
                G = stationBase.getGain(theta); %Gain dans la direction consideree
                E =  diffractedRayi.getE(G); %Calcul du champ arrivant au recepteur;
-               thetam = acos(abs(dot(diffractedRayi.getLastVect,[0 1]))); %Angle d'arrivée à l'antenne
-               he = recepteur.getHauteur(thetam); %Hauteur équivalente de l'antenne
-               PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne reçue
+               thetam = acos(abs(dot(diffractedRayi.getLastVect,[0 1]))); %Angle d'arrivï¿½e ï¿½ l'antenne
+               he = recepteur.getHauteur(thetam); %Hauteur ï¿½quivalente de l'antenne
+               PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne reï¿½ue
                
                %diffractedRayi.plot();
            end   
@@ -432,7 +474,7 @@ for x = 0:0.5:6.5
         
         
         powerDistributionZ(xi,yi) = PRX;
-        yi = yi+1; %Incrémentation indice ordonnée
+        yi = yi+1; %Incrï¿½mentation indice ordonnï¿½e
     end
     xi = xi+1;
     yi = 1;
@@ -449,9 +491,9 @@ powerDistributionX = 0:0.5:6.5;
 powerDistributionY = 0:0.5:10.5;
 surf(powerDistributionX,powerDistributionY,powerDistributionZ');
 colorbar;
-title('Distribution de la puissance de réception en fonction de la position du récepteur');
+title('Distribution de la puissance de rï¿½ception en fonction de la position du rï¿½cepteur');
 xlabel('Abscisse (m)');
-ylabel('Ordonnée (m)');
+ylabel('Ordonnï¿½e (m)');
 text(stationBase.x, stationBase.y, '\leftarrow Station de base');
 
 
