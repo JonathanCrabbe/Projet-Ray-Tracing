@@ -438,9 +438,7 @@ for x = 0:0.5:6.5
     yi = 1;
 end
 
-for i = 1:numel(wallList)
-    wallList(i).plot();
-end
+
 
 stationBase.plot();
 %recepteur.plot();
@@ -457,3 +455,6 @@ ylabel('Ordonnée (m)');
 text(stationBase.x, stationBase.y, '\leftarrow Station de base');
 
 
+for i = 1:numel(wallList)
+    wallList(i).plot();
+end
