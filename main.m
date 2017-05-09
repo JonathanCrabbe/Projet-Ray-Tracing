@@ -38,9 +38,7 @@ wallList = [wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall1
 
 %Affichage des murs:
 
-for i = 1:numel(wallList)
-    wallList(i).plot();
-end
+
 
 %Creation d'une liste de coins
  
@@ -440,7 +438,9 @@ for x = 0:0.5:6.5
     yi = 1;
 end
 
-
+for i = 1:numel(wallList)
+    wallList(i).plot();
+end
 
 stationBase.plot();
 %recepteur.plot();

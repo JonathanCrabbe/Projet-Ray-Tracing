@@ -29,12 +29,20 @@ classdef Antenne
         
         %Calcule le gain de l'antenne dans la direction theta (formule 5.44):
         function G = getGain(obj,theta)
-            G = obj.etha*120*pi*(obj.Ia^2/8*pi^2)*(cos(pi*cos(theta)/2)/sin(theta))^2;
+            if(sin(theta)~=0)
+                G = obj.etha*120*pi*(obj.Ia^2/8*pi^2)*(cos(pi*cos(theta)/2)/sin(theta))^2;
+            else 
+                G = 0;
+            end
         end
         
         %Calcule la hauteur équivalente de l'antenne dans la direction theta (formule 5.42):
         function h = getHauteur(obj,theta)
-            h = (obj.lambda * cos(pi/2 * cos(theta)))/(pi*(sin(theta))^2);
+            if(sin(theta)~=0)
+                h = (obj.lambda * cos(pi/2 * cos(theta)))/(pi*(sin(theta))^2);
+            else 
+                h = 0;
+            end
         end
         
     end 
