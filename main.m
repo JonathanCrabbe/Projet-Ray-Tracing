@@ -398,6 +398,32 @@ for x = 0:0.5:6.5
         for i = 1:(numel(cornerList))
            corneri = cornerList(i);
            
+           if (corneri.numWall == 1)
+               for j = 1:numel(wallList)
+                   wallj = wallList(j);
+                   if (getPointSegment(corneri.x1, corneri.y1, wallj.x1, wallj.y1, wallj.x2, wallj.y2))
+                       corneri.wall1 = wallj;
+                       break;
+                   end
+               end
+           end
+          
+           if (corneri.numWall == 2)
+               numberWall = 0;
+               for j = 1:numel(wallList)
+                   wallj = wallList(j);
+                   if (getPointSegment(corneri.x1, corneri.y1, wallj.x1, wallj.y1, wallj.x2, wallj.y2))
+                       if (numberWall == 0)
+                           corneri.wall1 = wallj;
+                           numberWall = 1;
+                       else
+                           corneri.wall2 = wallj;
+                           break;
+                       end
+                   end
+               end
+           end
+           
            diffractedRayi = Rayon(3);
            diffractedRayi.x1 = xd1;
            diffractedRayi.y1 = yd1;
