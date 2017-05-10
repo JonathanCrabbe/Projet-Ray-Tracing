@@ -7,6 +7,7 @@ classdef Corner
         perm %Permitivite relative
         cond %Conductivite
         eps2
+        numWall
     end
     
     properties (Constant = true) %Constantes utiles dans les calculs
@@ -18,25 +19,26 @@ classdef Corner
     
     methods
         %Constructeur:
-        function obj = Corner(x1,y1,perm,cond)
+        function obj = Corner(x1,y1,perm,cond,numWall)
             obj.x1 = x1;
             obj.y1 = y1;
             obj.perm = perm;
             obj.cond = cond;
             obj.eps2 = obj.perm * obj.eps0;
+            obj.numWall = numWall;
         end
         
         %Renvoie le coefficient de diffraction au travers du mur
         function D = getDiffraction(obj,thetai)
-            phip = thetai; % Angle d'incidence
-            %phi = 0; % Angle de refraction
-            %delta = pi - (phip-phi);
-            %sp = 0; % Distance ?? la source
-            %s = 0; % Dista,ce au recepteur
-            %L = s*sp/(s+sp);
+            phip = 0; % Angle d'incidence
+            phi = 0; % Angle de refraction
+            delta = pi - (phip-phi);
+            sp = sqrt((xd1-obj.x1)^2+(yd1-obj.y1)^2); % Distance a la source
+            s = sqrt((xd2-obj.x1)^2+(yd2-obj.y1)^2); % Dista,ce au recepteur
+            L = s*sp/(s+sp);
             %Calcul du coefficient de transmission par 8.79:
-            %ft = obj.FT(2*obj.beta*L*(sin(delta/2))^2);
-            %D = -(exp(-i*pi/4)/(2*sqrt(2*pi*obj.beta*L)))*(ft/sin(delta/2));
+            ft = obj.FT(2*obj.beta*L*(sin(delta/2))^2);
+            D = -(exp(-i*pi/4)/(2*sqrt(2*pi*obj.beta*L)))*(ft/sin(delta/2));
         end
         
          %Affichage de l'antenne:

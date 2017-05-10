@@ -42,27 +42,27 @@ wallList = [wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall1
 
 %Creation d'une liste de coins
  
-corner1 = Corner(0,0,epsMur,sigmaMur);
-corner2 = Corner(0,10.93,epsMur,sigmaMur);
-corner3 = Corner(7,10.93,epsMur,sigmaMur);
-corner4 = Corner(7,0,epsMur,sigmaMur);
-corner5 = Corner(0,8.36,epsMur,sigmaMur);
-corner6 = Corner(2.5,8.76,epsMur,sigmaMur);
-corner7 = Corner(2.5,7.29,epsMur,sigmaMur);
-corner8 = Corner(2.5,8.36,epsMur,sigmaMur);
-corner9 = Corner(0,6.16,epsMur,sigmaMur);
-corner10 = Corner(6.72,6.75,epsMur,sigmaMur);
-corner11 = Corner(6.72,7.75,epsMur,sigmaMur);
-corner12 = Corner(6.55,3.56,epsMur,sigmaMur);
-corner13 = Corner(7,3.56,epsMur,sigmaMur);
-corner14= Corner(3.32,5.06,epsMur,sigmaMur);
-corner15 = Corner(3.32,3.56,epsMur,sigmaMur);
-corner16 = Corner(3.32,4.36,epsMur,sigmaMur);
-corner17 = Corner(3.32,6.16,epsMur,sigmaMur);
-corner18 = Corner(1,1.2,epsMur,sigmaMur);
-corner19 = Corner(1,3.56,epsMur,sigmaMur);
-corner20 = Corner(0,3.56,epsMur,sigmaMur);
-corner21 = Corner(3.82,3.56,epsMur,sigmaMur);
+corner1 = Corner(0,0,epsMur,sigmaMur,2);
+corner2 = Corner(0,10.93,epsMur,sigmaMur,2);
+corner3 = Corner(7,10.93,epsMur,sigmaMur,2);
+corner4 = Corner(7,0,epsMur,sigmaMur,2);
+corner5 = Corner(0,8.36,epsMur,sigmaMur,2);
+corner6 = Corner(2.5,8.76,epsMur,sigmaMur,1);
+corner7 = Corner(2.5,7.29,epsMur,sigmaMur,1);
+corner8 = Corner(2.5,8.36,epsMur,sigmaMur,2);
+corner9 = Corner(0,6.16,epsMur,sigmaMur,2);
+corner10 = Corner(6.72,6.75,epsMur,sigmaMur,1);
+corner11 = Corner(6.72,7.75,epsMur,sigmaMur,1);
+corner12 = Corner(6.55,3.56,epsMur,sigmaMur,1);
+corner13 = Corner(7,3.56,epsMur,sigmaMur,2);
+corner14= Corner(3.32,5.06,epsMur,sigmaMur,1);
+corner15 = Corner(3.32,3.56,epsMur,sigmaMur,2);
+corner16 = Corner(3.32,4.36,epsMur,sigmaMur,1);
+corner17 = Corner(3.32,6.16,epsMur,sigmaMur,2);
+corner18 = Corner(1,1.2,epsMur,sigmaMur,1);
+corner19 = Corner(1,3.56,epsMur,sigmaMur,2);
+corner20 = Corner(0,3.56,epsMur,sigmaMur,2);
+corner21 = Corner(3.82,3.56,epsMur,sigmaMur,1);
 
 cornerList = [corner1,corner2,corner3,corner4,corner5,corner6,corner7,corner8,corner9,corner10,corner11,corner12,corner13,corner14,corner15,corner16,corner17,corner18,corner19,corner20,corner21];
 
@@ -397,81 +397,75 @@ for x = 0:0.5:6.5
 
         for i = 1:(numel(cornerList))
            corneri = cornerList(i);
-
+           
            diffractedRayi = Rayon(3);
            diffractedRayi.x1 = xd1;
            diffractedRayi.y1 = yd1;
+           diffractedRayi.x2 = corneri.x1;
+           diffractedRayi.y2 = corneri.y1;
            diffractedRayi.x3 = xd2;
            diffractedRayi.y3 = yd2;
-
-           nodiffraction = false;
+ 
            for j = 1:numel(wallList)
                    wallj = wallList(j);
                    %Segment de droite associe au mur:
                    lineWall = wallj.getLine();
-
+ 
                    %Segment de droite associe aux deux morceaux du rayon
                    lineRay1 = [xd1 yd1; corneri.x1 corneri.y1];
                    lineRay2 = [corneri.x1 corneri.y1; xd2 yd2];
-
-                   %Le rayon intersecte-t-il les murs? Si oui on ne doit pas en
-                   %tenir compte car la diffraction est trop forte
-
-                   intersectioni = getIntersection(lineRay1,lineWall);
-                   intersectionj = getIntersection(lineRay2,lineWall);
-
+ 
+                   %Le rayon intersecte-t-il les murs? Si oui on doit
+                   %calculer le coefficient de transmission
+ 
                    if (verifyIntersection(lineRay1,lineWall)) %Si le mur est rencontre, compatbiliser attenuation:
-                       if ( intersectioni(1) == corneri.x1)
-                           if ( intersectioni(2) == corneri.y1)
-                                nodiffraction = false;
-                           else
-                               nodiffraction = true;
-                               break;
-                           end
-                       else
-                            nodiffraction = true;
-                            break;
-                       end
-                   end
-                   if (verifyIntersection(lineRay2,lineWall)) %Si le mur est rencontre, compatbiliser attenuation:
-                       if ( intersectionj(1) == corneri.x1)
-                           if ( intersectionj(2) == corneri.y1)
-                                nodiffraction = false;
-                           else
-                               nodiffraction = true;
-                               break;
-                           end
-                       else
-                            nodiffraction = true;
-                            break;
-                       end
-                   end
+                        intersection = getIntersection(lineRay1,lineWall);
+                        if (intersection(1) == diffractedRayi.x2)
+                            if (intersection(2) ~= diffractedRayi.y2)    
+                                vectWall = wallj.getNormVect(); %Vecteur normal au mur norme
+                                vectRay1 = [diffractedRayi.x2-xd1 diffractedRayi.y2-yd1]/sqrt((xd1-diffractedRayi.x2)^2 + (yd1-diffractedRayi.y2)^2);
+                                thetai = acos(abs(dot(vectRay1,vectWall))); %Angle d'incidence
+                                diffractedRayi.At = diffractedRayi.At * wallj.getTransmission(thetai); %Attenuation
+                            end
+                        else
+                            vectWall = wallj.getNormVect(); %Vecteur normal au mur norme
+                            vectRay1 = [diffractedRayi.x2-xd1 diffractedRayi.y2-yd1]/sqrt((xd1-diffractedRayi.x2)^2 + (yd1-diffractedRayi.y2)^2);
+                            thetai = acos(abs(dot(vectRay1,vectWall))); %Angle d'incidence
+                            diffractedRayi.At = diffractedRayi.At * wallj.getTransmission(thetai); %Attenuation
+                        end
+                    end
+                    if (verifyIntersection(lineRay2,lineWall)) %Si le mur est rencontre, compatbiliser attenuation:
+                        intersection = getIntersection(lineRay2,lineWall);
+                        if (intersection(1) == diffractedRayi.x2)
+                            if (intersection(2) ~= diffractedRayi.y2)
+                                vectWall = wallj.getNormVect(); %Vecteur normal au mur norme
+                                vectRay2 = [xd2-diffractedRayi.x2 yd2-diffractedRayi.y2]/sqrt((diffractedRayi.x2-xd2)^2 + (diffractedRayi.y2-yd2)^2);
+                                thetai = acos(abs(dot(vectRay2,vectWall))); %Angle d'incidence
+                                diffractedRayi.At = diffractedRayi.At * wallj.getTransmission(thetai); %Attenuation
+                            end
+                        else
+                            vectWall = wallj.getNormVect(); %Vecteur normal au mur norme
+                            vectRay2 = [xd2-diffractedRayi.x2 yd2-diffractedRayi.y2]/sqrt((diffractedRayi.x2-xd2)^2 + (diffractedRayi.y2-yd2)^2);
+                            thetai = acos(abs(dot(vectRay2,vectWall))); %Angle d'incidence
+                            diffractedRayi.At = diffractedRayi.At * wallj.getTransmission(thetai); %Attenuation
+                        end
+                    end
            end
-
-           if (nodiffraction)
-               diffractedRayi.x2 = 1/0;
-               diffractedRayi.y2 = 1/0;
-               diffractedRayi.At = 0;
-           else
-               diffractedRayi.x2 = corneri.x1;
-               diffractedRayi.y2 = corneri.y1;
-
-               %thetai = 0;
-               %diffractedRayi.At = diffractedRayi.At * corneri.getDiffraction(thetai);
-
-               vectRay1 = [diffractedRayi.x2-xd1 diffractedRayi.y2-yd1]/sqrt((xd1-diffractedRayi.x2)^2 + (yd1-diffractedRayi.y2)^2);
-               theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement a l'antenne
-               G = stationBase.getGain(theta); %Gain dans la direction consideree
-               E =  diffractedRayi.getE(G); %Calcul du champ arrivant au recepteur;
-               thetam = acos(abs(dot(diffractedRayi.getLastVect,[0 1]))); %Angle d'arriv�e � l'antenne
-               he = recepteur.getHauteur(thetam); %Hauteur �quivalente de l'antenne
-               PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne re�ue
-               
-               %diffractedRayi.plot();
-           end   
-
-        end
-        
+ 
+ 
+           %diffractedRayi.At = diffractedRayi.At * corneri.getDiffraction(xd1,yd1,xd2,yd2);
+ 
+           vectRay1 = [diffractedRayi.x2-xd1 diffractedRayi.y2-yd1]/sqrt((xd1-diffractedRayi.x2)^2 + (yd1-diffractedRayi.y2)^2);
+           theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement a l'antenne
+           G = stationBase.getGain(theta); %Gain dans la direction consideree
+           E =  diffractedRayi.getE(G); %Calcul du champ arrivant au recepteur;
+           thetam = acos(abs(dot(diffractedRayi.getLastVect,[0 1]))); %Angle d'arrivï¿½e ï¿½ l'antenne
+           he = recepteur.getHauteur(thetam); %Hauteur ï¿½quivalente de l'antenne
+           PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne reï¿½ue
+              
+           %diffractedRayi.plot();
+ 
+        end 
         
         powerDistributionZ(xi,yi) = PRX;
         yi = yi+1; %Incr�mentation indice ordonn�e
