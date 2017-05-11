@@ -41,9 +41,9 @@ classdef Corner
             else
                 vectWall1 = obj.wall1.getNormVect();
                 vectWall2 = obj.wall2.getNormVect();
-                phi = acos(abs(dot(vectWall2,vectWall1)));
-                phip = acos(abs(dot(vectRay1,vectWall1))) - (phi/2); % Angle d'incidence
-                phi = acos(abs(dot(vectRay2,vectWall1)))- (phi/2); % Angle de refraction
+                psy = acos(abs(dot(vectWall2,vectWall1)));
+                phip = acos(abs(dot(vectRay1,vectWall1))) - (psy/2); % Angle d'incidence
+                phi = acos(abs(dot(vectRay2,vectWall1)))- (psy/2); % Angle de refraction
             end
            
             delta = pi - (phip-phi);
