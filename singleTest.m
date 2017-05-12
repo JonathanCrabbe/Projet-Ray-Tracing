@@ -1,4 +1,5 @@
 %Ceci est le script principal dans lequel est effectuee la simulation
+%
  
 clear all; close all;
  
@@ -72,8 +73,8 @@ for i = 1:numel(cornerList)
 end
 %Construction des objets antenne de l'environement
  
-stationBase = Antenne(2,8.66,lambda);
-recepteur = Antenne(5,2.5,lambda);
+stationBase = Antenne(1.5,9,lambda);
+recepteur = Antenne(2,8.66,lambda);
 E = 0; %Champ arrivant au recepteur
         PRX = 0; %Puissance arrivant au recepteur
        
@@ -92,15 +93,19 @@ E = 0; %Champ arrivant au recepteur
          yd2 = recepteur.y;
  
          directRay = Rayon(2); %Construction de l'objet rayon (a 2 points)
- 
-         vectRay = [xd2-xd1 yd2-yd1]/sqrt((xd1-xd2)^2 + (yd1-yd2)^2);
- 
+         
+         if(xd1 == xd2 && yd1 == yd2)
+             vectRay = [0 0];
+         else   
+            vectRay = [xd2-xd1 yd2-yd1]/sqrt((xd1-xd2)^2 + (yd1-yd2)^2);
+         end
+         
          %Affichage du rayon:
          directRay.x1 = xd1;
          directRay.y1 = yd1;
          directRay.x2 =xd2;
          directRay.y2 = yd2;
-         %directRay.plot();
+         directRay.plot();
  
          lineRay = [xd1 yd1; xd2 yd2]; %Segment associe au rayon
  
@@ -121,12 +126,12 @@ E = 0; %Champ arrivant au recepteur
             end
  
         end
-        theta = acos(abs(dot(vectRay,[0 1]))); %Angle relativement a l'antenne ï¿½mï¿½trice
+        theta = acos(abs(dot(vectRay,[0 1]))); %Angle relativement a l'antenne emetrice
         G = stationBase.getGain(theta); %Gain dans la direction consideree
         E = directRay.getE(G); %Calcul du champ arrivant au recepteur;
-        thetam = acos(abs(dot(directRay.getLastVect,[0 1]))); %Angle d'arrivï¿½e ï¿½ l'antenne
-        he = recepteur.getHauteur(thetam); %Hauteur ï¿½quivalente de l'antenne
-        PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra);%Puissance moyenne reï¿½ue
+        thetam = acos(abs(dot(directRay.getLastVect,[0 1]))); %Angle d'arrivee a l'antenne
+        he = recepteur.getHauteur(thetam); %Hauteur euivalente de l'antenne
+        PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne recue
  
         %2) Calcul des reflexions simples:
  
@@ -159,7 +164,6 @@ E = 0; %Champ arrivant au recepteur
             if(verifyIntersection(lineRay,lineWall))
                reflectedRayi.x2 = intersectioni(1);
                reflectedRayi.y2 = intersectioni(2);
- 
                % Coefficient de reflexion
  
                vectRay1 = [reflectedRayi.x2-xd1 reflectedRayi.y2-yd1]/sqrt((xd1-reflectedRayi.x2)^2 + (yd1-reflectedRayi.y2)^2);
@@ -227,7 +231,7 @@ E = 0; %Champ arrivant au recepteur
  
            %Affichage rayon:
           
-          %reflectedRayi.plot();
+          reflectedRayi.plot();
          
         end
  
@@ -379,7 +383,7 @@ E = 0; %Champ arrivant au recepteur
  
                            %Affichage rayon:
                           
-                           %reflectedRayij.plot();
+                           reflectedRayij.plot();
                           
                           
                   end

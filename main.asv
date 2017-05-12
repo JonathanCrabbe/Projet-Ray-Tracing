@@ -100,11 +100,7 @@ for x = 0:0.5:6.5
 
          directRay = Rayon(2); %Construction de l'objet rayon (a 2 points)
 
-         if(xd1 == xd2 && yd1 == yd2)
-             vectRay = [0 0];
-         else   
-            vectRay = [xd2-xd1 yd2-yd1]/sqrt((xd1-xd2)^2 + (yd1-yd2)^2);
-         end
+         vectRay = [xd2-xd1 yd2-yd1]/sqrt((xd1-xd2)^2 + (yd1-yd2)^2);
 
          %Affichage du rayon:
          directRay.x1 = xd1;
@@ -226,7 +222,7 @@ for x = 0:0.5:6.5
           G = stationBase.getGain(theta); %Gain dans la direction consideree
           E =  reflectedRayi.getE(G); %Calcul du champ arrivant au recepteur
           thetam = acos(abs(dot(reflectedRayi.getLastVect,[0 1]))); %Angle d'arriv�e � l'antenne
-          he = recepteur.getHauteur(thetam); %Hauteur equivalente de l'antenne
+          he = recepteur.getHauteur(thetam); %Hauteur �quivalente de l'antenne
           PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne re�ue
           
           else % Rayon pas valable car il n'intersecte pas le mur
@@ -515,9 +511,9 @@ powerDistributionX = 0:0.5:6.5;
 powerDistributionY = 0:0.5:10.5;
 surf(powerDistributionX,powerDistributionY,powerDistributionZ');
 colorbar;
-title('Distribution de la puissance de reception en fonction de la position du recepteur');
+title('Distribution de la puissance de r�ception en fonction de la position du r�cepteur');
 xlabel('Abscisse (m)');
-ylabel('Ordonnee (m)');
+ylabel('Ordonn�e (m)');
 text(stationBase.x, stationBase.y, '\leftarrow Station de base');
 
 

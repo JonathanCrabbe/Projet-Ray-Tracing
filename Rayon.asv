@@ -44,14 +44,11 @@ classdef Rayon
                E = 0;
            else   
                d = obj.getD();
-               if(d == 0) 
-                   E = 0; %Champ proche ==> formules plus valables sinon divergence
-               else     
-                   mu0 = 4*pi*10^-7;
-                   eps0 = 10^-9 / (36*pi);
-                   beta = 2*pi*(2.45*10^9)*sqrt(eps0*mu0);
-                   E = exp(-i*beta*d)*obj.At*sqrt(60*G*obj.Pem)/d;
-               end 
+                if(d == 0)
+               mu0 = 4*pi*10^-7;
+               eps0 = 10^-9 / (36*pi);
+               beta = 2*pi*(2.45*10^9)*sqrt(eps0*mu0);
+               E = exp(-i*beta*d)*obj.At*sqrt(60*G*obj.Pem)/d;
            end
         end
         
@@ -82,13 +79,7 @@ classdef Rayon
            end
            
            norm = sqrt(x^2+y^2);
-           
-           if(norm == 0)
-               vect = [0 0];
-           else     
-               vect = [x y]/norm; 
-           end
-           
+           vect = [x y]/norm; 
           end
     end 
 end
