@@ -1,38 +1,37 @@
-function [ intersection] = getPointSegment( xpoint,ypoint, xextreme1, yextreme1, xextreme2, yextreme2 )
-      % Ce script v√©rifie qu'un point est sur un segment
-     intersection = false;
-     if (yextreme1 ~= yextreme2)
-        if (((xextreme2-xextreme1)/(yextreme2-yextreme1) == (xpoint-xextreme1)/(ypoint-yextreme1)) || ((xextreme2-xextreme1)/(yextreme2-yextreme1) == -(xpoint-xextreme1)/(ypoint-yextreme1)))
-            if ( xextreme1 < xextreme2)
-                if( xpoint <= xextreme2 && xpoint >= xextreme1)
-                    intersection = true;
-                end
-            elseif ( xextreme1 > xextreme2)
-                if( xpoint >= xextreme2 && xpoint <= xextreme1)
-                    intersection = true;
-                end
-            else
-                if ( yextreme1 < yextreme2)
-                    if( ypoint <= yextreme2 && ypoint >= yextreme1)
-                        intersection = true;
-                    end
-                else
-                    if( ypoint >= yextreme2 && ypoint <= yextreme1)
-                        intersection = true;
-                    end
-                end
-            end
-        end
-     else
-        if (ypoint == yextreme1)
-            if ( xextreme1 < xextreme2)
-                if( xpoint <= xextreme2 && xpoint >= xextreme1)
-                    intersection = true;
-                end
-            else
-                if( xpoint >= xextreme2 && xpoint <= xextreme1)
-                    intersection = true;
-                end
-            end
-        end
+function [ doIntersect] = getPointSegment( xpoint,ypoint, line )
+      % Ce script verifie qu'un point (xpoint,ypoint) est sur un segment
+      % line
+     doIntersect = false;
+    
+     m = (line(2,2) - line(1,2))/(line(2,1) - line(1,1)); %Pente de la droite
+     p = line(2,2) - m * line(2,1); %Translation verticale de la droite relativement ‡ l'origine
+     yinter = m*xpoint+p; %Ordonnee theorique du point sur la droite
+   
+     %VÈrifie si l'absisce est dans l'intervalle considere
+     isXPointInside = @(xint,myline) ...
+    (xint >= myline(1,1) && xint <= myline(2,1)) || ...
+    (xint >= myline(2,1) && xint <= myline(1,1));
+
+     %VÈrifie si l'odonnÈe est dans l'intervalle considere
+     isYPointInside = @(yint,myline) ...
+    (yint >= myline(1,2) && yint <= myline(2,2)) || ...
+    (yint >= myline(2,2) && yint <= myline(1,2));
+
+    if(line(2,1) == line(1,1)) %Droite  verticale
+         
+         doIntersect = xpoint == line(1,1) && ... %Abscisce dans la droite 
+         isYPointInside(ypoint,line) ; %Ordonnee dans la droite 
+
+    elseif(line(2,2) == line(1,2)) %Droite horizontale
+        
+         doIntersect = isXPointInside(xpoint,line) && ... %Abscisce dans la droite 
+          ypoint == line(1,2); %Ordonnee dans la droite 
+   
+    
+    else
+         doIntersect = isPointInside(xintersect,line) && ... %Le point est sur le segment
+         yinter == ypoint; %Les ordonnes coinincident
+    end
+
+    
      end

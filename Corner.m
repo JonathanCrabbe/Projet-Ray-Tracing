@@ -7,9 +7,9 @@ classdef Corner
         perm %Permitivite relative
         cond %Conductivite
         eps2
-        numWall
-        wall1
-        wall2
+        numWall %Nombre de murs passant par le coin
+        wall1 %Premier mur auquel le coin appartient
+        wall2 %Second mur auquel le coin appartient
     end
    
     properties (Constant = true) %Constantes utiles dans les calculs

@@ -388,13 +388,14 @@ E = 0; %Champ arrivant au recepteur
  
         %4) Calcul de la diffraction
  
+        %Couplage entre les murs et les coins encodes: 
         for i = 1:(numel(cornerList))
            corneri = cornerList(i);
            
            if (corneri.numWall == 1)
                for j = 1:numel(wallList)
                    wallj = wallList(j);
-                   if (getPointSegment(corneri.x1, corneri.y1, wallj.x1, wallj.y1, wallj.x2, wallj.y2))
+                   if (getPointSegment(corneri.x1, corneri.y1, wallj.getLine()))
                        corneri.wall1 = wallj;
                        break;
                    end
@@ -405,7 +406,7 @@ E = 0; %Champ arrivant au recepteur
                numberWall = 0;
                for j = 1:numel(wallList)
                    wallj = wallList(j);
-                   if (getPointSegment(corneri.x1, corneri.y1, wallj.x1, wallj.y1, wallj.x2, wallj.y2))
+                   if (getPointSegment(corneri.x1, corneri.y1, wallj.getLine()))
                        if (numberWall == 0)
                            corneri.wall1 = wallj;
                            numberWall = 1;
