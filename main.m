@@ -513,12 +513,12 @@ stationBase.plot();
 
 X = 0:0.5:7;
 Y = 0:0.5:10.5;
-surf(X,Y,speedDistribution');
+surf(X,Y,speedDistribution', 'FaceAlpha', 0.5);
 colorbar;
 title('Distribution du debit recu en fonction de la position du recepteur');
 xlabel('Abscisse (m)');
 ylabel('Ordonnee (m)');
-text(stationBase.x, stationBase.y, '\leftarrow Station de base');
+text(stationBase.x, stationBase.y, '\leftarrow EX');
 
 
 for i = 1:numel(wallList)
