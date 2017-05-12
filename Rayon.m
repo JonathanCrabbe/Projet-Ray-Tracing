@@ -67,7 +67,20 @@ classdef Rayon
             end
         end
         
-        %Renvoie le dernier vecteur directeur du rayon
+        %Renvoie le premier vecteur directeur du rayon:
+        function vect = getFirstVect(obj)
+            x = obj.x2 - obj.x1;
+            y = obj.y2 - obj.y1;
+            norm = sqrt(x^2 + y^2);
+            
+            if(norm == 0)
+                vect = [0 0];
+            else
+                vect = [x y]/norm;
+            end
+        end
+        
+        %Renvoie le dernier vecteur directeur du rayon:
         function vect = getLastVect(obj)
             
            if (obj.numPoints == 2)

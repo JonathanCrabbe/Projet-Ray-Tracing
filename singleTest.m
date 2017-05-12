@@ -73,8 +73,8 @@ for i = 1:numel(cornerList)
 end
 %Construction des objets antenne de l'environement
  
-stationBase = Antenne(1.5,9,lambda);
-recepteur = Antenne(2,8.66,lambda);
+stationBase = Antenne(2,8.66,lambda);
+recepteur = Antenne(2,9,lambda);
 E = 0; %Champ arrivant au recepteur
         PRX = 0; %Puissance arrivant au recepteur
        
@@ -214,12 +214,12 @@ E = 0; %Champ arrivant au recepteur
                     end
                end
           %Pour un rayon valable, on ajoute la puissance au recepteur:    
-          vectRay1 = [reflectedRayi.x2-xd1 reflectedRayi.y2-yd1]/sqrt((xd1-reflectedRayi.x2)^2 + (yd1-reflectedRayi.y2)^2);
+          vectRay1 = reflectedRayi.getFirstVect();
           theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement a l'antenne
           G = stationBase.getGain(theta); %Gain dans la direction consideree
           E =  reflectedRayi.getE(G); %Calcul du champ arrivant au recepteur
           thetam = acos(abs(dot(reflectedRayi.getLastVect,[0 1]))); %Angle d'arrivï¿½e ï¿½ l'antenne
-          he = recepteur.getHauteur(thetam); %Hauteur ï¿½quivalente de l'antenne
+          he = recepteur.getHauteur(thetam); %Hauteur equivalente de l'antenne
           PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne reï¿½ue
          
           else % Rayon pas valable car il n'intersecte pas le mur
@@ -362,9 +362,7 @@ E = 0; %Champ arrivant au recepteur
                             end
                            %Pour un rayon valable, on ajoute la
                            %contribution en puissance:
-                           vectRay1 = [reflectedRayij.x2-xd1 ...
-                               reflectedRayij.y2-yd1]/sqrt((xd1-reflectedRayij.x2)^2 + ...
-                               (yd1-reflectedRayij.y2)^2);
+                           vectRay1 = reflectedRayij.getFirstVect();
                            theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement a l'antenne
                            G = stationBase.getGain(theta); %Gain dans la direction consideree
                            E =  reflectedRayij.getE(G); %Calcul du champ arrivant au recepteur
@@ -479,7 +477,7 @@ E = 0; %Champ arrivant au recepteur
  
            %diffractedRayi.At = diffractedRayi.At * corneri.getDiffraction(xd1,yd1,xd2,yd2);
  
-           vectRay1 = [diffractedRayi.x2-xd1 diffractedRayi.y2-yd1]/sqrt((xd1-diffractedRayi.x2)^2 + (yd1-diffractedRayi.y2)^2);
+           vectRay1 = diffractedRayi.getFirstVect();
            theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement a l'antenne
            G = stationBase.getGain(theta); %Gain dans la direction consideree
            E =  diffractedRayi.getE(G); %Calcul du champ arrivant au recepteur;

@@ -72,13 +72,14 @@ end
 %Construction de la station de base
 
 stationBase = Antenne(2,8.66,lambda);
-powerDistributionZ = []; %Puissance recue en (X,Y)
+powerDistribution = []; %Puissance recue en (X,Y)
+speedDistribution = []; %Debit recu en (X,Y)
 
 %Application de l'algorithme de Ray Tracing � differents recepteurs:
 
 xi = 1; %Indice abscisce
 yi = 1; %Indice ordonnee
-for x = 0:0.5:6.5
+for x = 0:0.5:7
     for y = 0:0.5:10.5 
         recepteur = Antenne(x,y,lambda);
         E = 0; %Champ arrivant au recepteur
@@ -221,7 +222,7 @@ for x = 0:0.5:6.5
                     end
                end
           %Pour un rayon valable, on ajoute la puissance au recepteur:     
-          vectRay1 = [reflectedRayi.x2-xd1 reflectedRayi.y2-yd1]/sqrt((xd1-reflectedRayi.x2)^2 + (yd1-reflectedRayi.y2)^2);
+          vectRay1 = reflectedRayi.getFirstVect();
           theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement a l'antenne
           G = stationBase.getGain(theta); %Gain dans la direction consideree
           E =  reflectedRayi.getE(G); %Calcul du champ arrivant au recepteur
@@ -369,9 +370,7 @@ for x = 0:0.5:6.5
                             end
                            %Pour un rayon valable, on ajoute la
                            %contribution en puissance:
-                           vectRay1 = [reflectedRayij.x2-xd1 ...
-                               reflectedRayij.y2-yd1]/sqrt((xd1-reflectedRayij.x2)^2 + ...
-                               (yd1-reflectedRayij.y2)^2);
+                           vectRay1 = reflectedRayij.getFirstVect();
                            theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement a l'antenne
                            G = stationBase.getGain(theta); %Gain dans la direction consideree
                            E =  reflectedRayij.getE(G); %Calcul du champ arrivant au recepteur
@@ -485,7 +484,7 @@ for x = 0:0.5:6.5
  
            %diffractedRayi.At = diffractedRayi.At * corneri.getDiffraction(xd1,yd1,xd2,yd2);
  
-           vectRay1 = [diffractedRayi.x2-xd1 diffractedRayi.y2-yd1]/sqrt((xd1-diffractedRayi.x2)^2 + (yd1-diffractedRayi.y2)^2);
+           vectRay1 = diffractedRayi.getFirstVect();
            theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement a l'antenne
            G = stationBase.getGain(theta); %Gain dans la direction consideree
            E =  diffractedRayi.getE(G); %Calcul du champ arrivant au recepteur;
@@ -497,8 +496,9 @@ for x = 0:0.5:6.5
  
         end 
         
-        powerDistributionZ(xi,yi) = PRX;
-        yi = yi+1; %Incr�mentation indice ordonn�e
+        powerDistribution(xi,yi) = PRX;
+        speedDistribution(xi,yi) = powertodebit(PRX);
+        yi = yi+1; %Incrementation indice ordonnee
     end
     xi = xi+1;
     yi = 1;
@@ -511,11 +511,11 @@ stationBase.plot();
 
 %Affichage de la distribution de puissance:
 
-powerDistributionX = 0:0.5:6.5;
-powerDistributionY = 0:0.5:10.5;
-surf(powerDistributionX,powerDistributionY,powerDistributionZ');
+X = 0:0.5:7;
+Y = 0:0.5:10.5;
+surf(X,Y,speedDistribution');
 colorbar;
-title('Distribution de la puissance de reception en fonction de la position du recepteur');
+title('Distribution du debit recu en fonction de la position du recepteur');
 xlabel('Abscisse (m)');
 ylabel('Ordonnee (m)');
 text(stationBase.x, stationBase.y, '\leftarrow Station de base');

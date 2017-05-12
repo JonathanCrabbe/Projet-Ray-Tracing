@@ -21,5 +21,9 @@ if(line2(2,1) == line2(1,1)) %Droite 2 verticale
     intersection = [line2(1,1); m1*line2(1,1)+b1];
 end
 
+if(m1 == m2 && b1 == b2)
+    intersection = [line1(1,1); line1(1,2)];
+end
+
 end
 
