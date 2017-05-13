@@ -75,7 +75,7 @@ stationBase = Antenne(2,8.66,lambda);
 powerDistribution = []; %Puissance recue en (X,Y)
 speedDistribution = []; %Debit recu en (X,Y)
 
-%Application de l'algorithme de Ray Tracing � differents recepteurs:
+%Application de l'algorithme de Ray Tracing a differents recepteurs:
 
 xi = 1; %Indice abscisce
 yi = 1; %Indice ordonnee
@@ -136,7 +136,7 @@ for x = 0:0.5:7
         theta = acos(abs(dot(vectRay,[0 1]))); %Angle relativement a l'antenne �m�trice
         G = stationBase.getGain(theta); %Gain dans la direction consideree
         E = directRay.getE(G); %Calcul du champ arrivant au recepteur;
-        thetam = acos(abs(dot(directRay.getLastVect,[0 1]))); %Angle d'arriv�e � l'antenne
+        thetam = acos(abs(dot(directRay.getLastVect,[0 1]))); %Angle d'arrivee a l'antenne
         he = recepteur.getHauteur(thetam); %Hauteur �quivalente de l'antenne
         PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne recue
 
@@ -226,7 +226,7 @@ for x = 0:0.5:7
           theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement a l'antenne
           G = stationBase.getGain(theta); %Gain dans la direction consideree
           E =  reflectedRayi.getE(G); %Calcul du champ arrivant au recepteur
-          thetam = acos(abs(dot(reflectedRayi.getLastVect,[0 1]))); %Angle d'arriv�e � l'antenne
+          thetam = acos(abs(dot(reflectedRayi.getLastVect,[0 1]))); %Angle d'arrivee a l'antenne
           he = recepteur.getHauteur(thetam); %Hauteur equivalente de l'antenne
           PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne re�ue
           
@@ -375,7 +375,7 @@ for x = 0:0.5:7
                            G = stationBase.getGain(theta); %Gain dans la direction consideree
                            E =  reflectedRayij.getE(G); %Calcul du champ arrivant au recepteur
                            thetam = acos(abs(dot(reflectedRayij.getLastVect,[0 1]))); %Angle d'arriv�e � l'antenne
-                           he = recepteur.getHauteur(thetam); %Hauteur �quivalente de l'antenne
+                           he = recepteur.getHauteur(thetam); %Hauteur equivalente de l'antenne
                            PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne re�ue
 
                         else
@@ -488,8 +488,8 @@ for x = 0:0.5:7
            theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement a l'antenne
            G = stationBase.getGain(theta); %Gain dans la direction consideree
            E =  diffractedRayi.getE(G); %Calcul du champ arrivant au recepteur;
-           thetam = acos(abs(dot(diffractedRayi.getLastVect,[0 1]))); %Angle d'arrivï¿½e ï¿½ l'antenne
-           he = recepteur.getHauteur(thetam); %Hauteur ï¿½quivalente de l'antenne
+           thetam = acos(abs(dot(diffractedRayi.getLastVect,[0 1]))); %Angle d'arriee a l'antenne
+           he = recepteur.getHauteur(thetam); %Hauteur equivalente de l'antenne
            PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne reï¿½ue
               
            %diffractedRayi.plot();
@@ -514,7 +514,8 @@ stationBase.plot();
 X = 0:0.5:7;
 Y = 0:0.5:10.5;
 surf(X,Y,speedDistribution', 'FaceAlpha', 0.5);
-colorbar;
+c = colorbar;
+c.Label.String = 'Debit binaire maximal (Mb/s)';
 title('Distribution du debit recu en fonction de la position du recepteur');
 xlabel('Abscisse (m)');
 ylabel('Ordonnee (m)');

@@ -74,7 +74,7 @@ end
 %Construction des objets antenne de l'environement
  
 stationBase = Antenne(2,8.66,lambda);
-recepteur = Antenne(2,9,lambda);
+recepteur = Antenne(2.5,8.5,lambda);
 E = 0; %Champ arrivant au recepteur
         PRX = 0; %Puissance arrivant au recepteur
        
@@ -218,9 +218,9 @@ E = 0; %Champ arrivant au recepteur
           theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement a l'antenne
           G = stationBase.getGain(theta); %Gain dans la direction consideree
           E =  reflectedRayi.getE(G); %Calcul du champ arrivant au recepteur
-          thetam = acos(abs(dot(reflectedRayi.getLastVect,[0 1]))); %Angle d'arrivï¿½e ï¿½ l'antenne
+          thetam = acos(abs(dot(reflectedRayi.getLastVect,[0 1]))); %Angle d'arrivee a l'antenne
           he = recepteur.getHauteur(thetam); %Hauteur equivalente de l'antenne
-          PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne reï¿½ue
+          PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne recue
          
           else % Rayon pas valable car il n'intersecte pas le mur
                reflectedRayi.x2 = 1/0;
@@ -366,9 +366,9 @@ E = 0; %Champ arrivant au recepteur
                            theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement a l'antenne
                            G = stationBase.getGain(theta); %Gain dans la direction consideree
                            E =  reflectedRayij.getE(G); %Calcul du champ arrivant au recepteur
-                           thetam = acos(abs(dot(reflectedRayij.getLastVect,[0 1]))); %Angle d'arrivï¿½e ï¿½ l'antenne
-                           he = recepteur.getHauteur(thetam); %Hauteur ï¿½quivalente de l'antenne
-                           PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne reï¿½ue
+                           thetam = acos(abs(dot(reflectedRayij.getLastVect,[0 1]))); %Angle d'arrivee a l'antenne
+                           he = recepteur.getHauteur(thetam); %Hauteur equivalente de l'antenne
+                           PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne recue
  
                         else
                             reflectedRayij.x2 = 1/0;
@@ -481,9 +481,9 @@ E = 0; %Champ arrivant au recepteur
            theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement a l'antenne
            G = stationBase.getGain(theta); %Gain dans la direction consideree
            E =  diffractedRayi.getE(G); %Calcul du champ arrivant au recepteur;
-           thetam = acos(abs(dot(diffractedRayi.getLastVect,[0 1]))); %Angle d'arrivï¿½e ï¿½ l'antenne
-           he = recepteur.getHauteur(thetam); %Hauteur ï¿½quivalente de l'antenne
-           PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne reï¿½ue
+           thetam = acos(abs(dot(diffractedRayi.getLastVect,[0 1]))); %Angle d'arrivee a l'antenne
+           he = recepteur.getHauteur(thetam); %Hauteur equivalente de l'antenne
+           PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne recue
               
            diffractedRayi.plot();
  
