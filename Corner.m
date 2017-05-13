@@ -32,8 +32,16 @@ classdef Corner
        
         %Renvoie le coefficient de diffraction au travers du mur
         function D = getDiffraction(obj,xd1,yd1,xd2,yd2)
-            vectRay1 = [obj.x1-xd1 obj.y1-yd1]/sqrt((xd1-obj.x1)^2 + (yd1-obj.y1)^2);
-            vectRay2 = [xd2-obj.x1 yd2-obj.y1]/sqrt((obj.x1-xd2)^2 + (obj.y1-yd2)^2);
+            if (sqrt((xd1-obj.x1)^2 + (yd1-obj.y1)^2) == 0)
+                vectRay1 = [0 0];
+            else
+                vectRay1 = [obj.x1-xd1 obj.y1-yd1]/sqrt((xd1-obj.x1)^2 + (yd1-obj.y1)^2);
+            end
+            if(sqrt((obj.x1-xd2)^2 + (obj.y1-yd2)^2) == 0)
+                vectRay2 = [0 0];
+            else
+                vectRay2 = [xd2-obj.x1 yd2-obj.y1]/sqrt((obj.x1-xd2)^2 + (obj.y1-yd2)^2);
+            end
             if (obj.numWall == 1)
                 vectWall = obj.wall1.getNormVect();
                 phip = acos(abs(dot(vectRay1,vectWall))); % Angle d'incidence
@@ -45,14 +53,16 @@ classdef Corner
                 phip = acos(abs(dot(vectRay1,vectWall1))) - (psy/2); % Angle d'incidence
                 phi = acos(abs(dot(vectRay2,vectWall1)))- (psy/2); % Angle de refraction
             end
-           
+          
             delta = pi - (phip-phi);
             sp = sqrt((xd1-obj.x1)^2+(yd1-obj.y1)^2); % Distance a la source
             s = sqrt((xd2-obj.x1)^2+(yd2-obj.y1)^2); % Dista,ce au recepteur
-            L = s*sp/(s+sp);
-            %Calcul du coefficient de transmission par 8.79:
+            L = s*sp/(s+sp);            %Calcul du coefficient de transmission par 8.79:
             ft = obj.FT(2*obj.beta*L*(sin(delta/2))^2);
             D = -(exp(-i*pi/4)/(2*sqrt(2*pi*obj.beta*L)))*(ft/sin(delta/2));
+            if (sqrt((xd1-obj.x1)^2 + (yd1-obj.y1)^2) == 0 || sqrt((obj.x1-xd2)^2 + (obj.y1-yd2)^2) == 0)
+                 D = 1;
+            end
         end
        
          %Affichage de l'antenne:
@@ -62,8 +72,8 @@ classdef Corner
         end
        
         function ft = FT(obj,x)
-            fun = @(t) exp(-i*t^2);
-            ft = 2*i*sqrt(x)*exp(j*x)*integral(fun,sqrt(x),Inf);
+            fun = @(t) exp(-i*t.^2);
+            ft = 2*i*sqrt(x)*exp(j*x)*integral(fun,sqrt(x),sqrt(11*pi));
         end
     end
 end

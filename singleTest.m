@@ -475,7 +475,7 @@ E = 0; %Champ arrivant au recepteur
            end
  
  
-           %diffractedRayi.At = diffractedRayi.At * corneri.getDiffraction(xd1,yd1,xd2,yd2);
+           diffractedRayi.At = diffractedRayi.At * corneri.getDiffraction(xd1,yd1,xd2,yd2);
  
            vectRay1 = diffractedRayi.getFirstVect();
            theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement a l'antenne
