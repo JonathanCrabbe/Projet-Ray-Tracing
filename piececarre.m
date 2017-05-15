@@ -25,7 +25,7 @@ wall4 = Wall(10,0,0,0,epsMur, sigmaMur,0.2);
 
 
 %Creation d'une liste contenant les murs: 
-wallList = [wall1, wall2, wall3, wall4];
+wallList = [wall1 wall2 wall3 wall4];
 
 %Affichage des murs:
 
@@ -466,7 +466,14 @@ for x = 0:0.5:10
  
         end 
         
+        %Ceci tombe à l'eau en champ proche:
+        
+        if(sqrt((x-stationBase.x)^2+(y-stationBase.y)^2)< 1.6*lambda)
+            PRX = 0.1; %0,1 Watt au voisinage de l'antenne
+        end
+        
         powerDistribution(xi,yi) = PRX;
+        
         speedDistribution(xi,yi) = powertodebit(PRX);
         yi = yi+1; %Incrementation indice ordonnee
     end

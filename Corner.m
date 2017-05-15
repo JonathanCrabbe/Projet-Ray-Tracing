@@ -65,7 +65,7 @@ classdef Corner
             end
         end
        
-         %Affichage de l'antenne:
+         %Affichage du coin:
         function plot(obj)
             plot(obj.x1 ,obj.y1,'*r');
             hold on;

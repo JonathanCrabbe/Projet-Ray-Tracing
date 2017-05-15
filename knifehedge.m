@@ -151,7 +151,7 @@ for x = 0:0.1:90
            end
  
  
-           diffractedRayi.At = diffractedRayi.At * corneri.getDiffraction(xd1,yd1,xd2,yd2)
+           diffractedRayi.At = diffractedRayi.At * corneri.getDiffraction(xd1,yd1,xd2,yd2);
  
            vectRay1 = diffractedRayi.getFirstVect();
            theta = acos(abs(dot(vectRay1,[0 1]))); %Angle relativement a l'antenne
@@ -159,11 +159,16 @@ for x = 0:0.1:90
            E =  diffractedRayi.getE(G); %Calcul du champ arrivant au recepteur;
            thetam = acos(abs(dot(diffractedRayi.getLastVect,[0 1]))); %Angle d'arrivï¿½e ï¿½ l'antenne
            he = recepteur.getHauteur(thetam); %Hauteur ï¿½quivalente de l'antenne
-           PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra) %Puissance moyenne reï¿½ue
-           PRX = PRX*10000000  
+           PRX = PRX + ((abs(he*E))^2)/(8*recepteur.Ra); %Puissance moyenne reï¿½ue
+  
            %diffractedRayi.plot();
  
         end 
+        
+        %Ceci tombe � l'eau au voisinage d'une antenne
+        if(sqrt((x-stationBase.x)^2+(y-stationBase.y)^2)< 1.6*lambda)
+            PRX = 0.1; %0,1 Watt au voisinage de l'antenne
+        end
         
         powerDistribution(xi,yi) = PRX;
         speedDistribution(xi,yi) = powertodebit(PRX);
