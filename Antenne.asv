@@ -6,6 +6,8 @@ classdef Antenne
         x %Abscisse de l'origine de l'antenne
         y %Ordonnee de l'origine de l'antenne
         lambda %Longueur d'onde rayonnee ou recue
+        Ia = sqrt(2*0.1/73); %Courant parcouru par l'antenne si elle rayonne
+        etha = 1; %Rendement de l'antenne
         Ra = 73;  %Resistance d'antenne (ohm)
            
     end
@@ -25,13 +27,12 @@ classdef Antenne
             hold on;
         end
         
-        %Calcule le gain de l'antenne dans la direction theta (formule 5.36):
+        %Calcule le gain de l'antenne dans la direction theta (formule 5.44):
         function G = getGain(obj,theta)
             if(sin(theta)~=0)
                 Z0 = 120*pi;
                 A = Z0*obj.lambda^2*(cos(pi*cos(theta)/2)/sin(theta))^2/(4*pi^2*obj.Ra);
-                %Surface équivalente
-                G = 4*pi*A/(obj.lambda)^2;
+                G = obj.etha*120*pi*(obj.Ia^2/8*pi^2)*(cos(pi*cos(theta)/2)/sin(theta))^2;
             else 
                 G = 0;
             end

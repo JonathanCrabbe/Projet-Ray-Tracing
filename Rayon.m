@@ -50,7 +50,7 @@ classdef Rayon
                    mu0 = 4*pi*10^-7;
                    eps0 = 10^-9 / (36*pi);
                    beta = 2*pi*(2.45*10^9)*sqrt(eps0*mu0);
-                   E = exp(-i*beta*d)*obj.At*sqrt(60*G*obj.Pem)/d;
+                   E = exp(-1i*beta*d)*obj.At*sqrt(60*G*obj.Pem)/d;
                end 
            end
         end

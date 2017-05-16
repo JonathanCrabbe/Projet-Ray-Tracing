@@ -72,13 +72,10 @@ end
 %Construction de la station de base
 
 stationBase = Antenne(2,8.66,lambda);
-powerDistribution = []; %Puissance recue en (X,Y)
-speedDistribution = []; %Debit recu en (X,Y)
+
 
 %Application de l'algorithme de Ray Tracing a differents recepteurs:
 
-xi = 1; %Indice abscisce
-yi = 1; %Indice ordonnee
 for x = 0:0.5:7
     for y = 0:0.5:10.5 
         recepteur = Antenne(x,y,lambda);
@@ -496,12 +493,14 @@ for x = 0:0.5:7
             PRX = 0.1; %0,1 Watt au voisinage de l'antenne
         end
         
-        powerDistribution(xi,yi) = PRX;
-        speedDistribution(xi,yi) = powertodebit(PRX);
-        yi = yi+1; %Incrementation indice ordonnee
+        if (10*(log10(PRX)+3)>-93)
+            rectangle('Position',[x,y,0.5,0.5],'FaceColor','g'); hold on
+        else
+            rectangle('Position',[x,y,0.5,0.5],'FaceColor','r'); hold on
+        end
+        
     end
-    xi = xi+1;
-    yi = 1;
+  
 end
 
 
@@ -511,11 +510,7 @@ stationBase.plot();
 
 %Affichage de la distribution de puissance:
 
-X = 0:0.5:7;
-Y = 0:0.5:10.5;
-surf(X,Y,speedDistribution', 'FaceAlpha', 0.5);
-c = colorbar;
-c.Label.String = 'Debit binaire maximal (Mb/s)';
+
 title('Distribution du debit recu en fonction de la position du recepteur');
 xlabel('Abscisse (m)');
 ylabel('Ordonnee (m)');
