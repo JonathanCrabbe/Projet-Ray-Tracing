@@ -36,8 +36,8 @@ classdef Wall
             obj.eps2 = obj.perm * obj.eps0;
             obj.Z2 = sqrt((obj.eps2)/(obj.mu0));
             obj.betam = 2*pi*(2.45*10^9)*sqrt(obj.eps2*obj.mu0);
-            obj.alpha = 2*pi*(2.45*10^9)*sqrt(obj.eps2*obj.mu0/2)*sqrt(sqrt(1+(cond/(obj.eps2*2*pi*2.45*10^9)^2))-1);
-            obj.betagamma = 2*pi*(2.45*10^9)*sqrt(obj.eps2*obj.mu0/2)*sqrt(sqrt(1+(cond/(obj.eps2*2*pi*2.45*10^9)^2))+1);
+            obj.alpha = 2*pi*(2.45*10^9)*sqrt(obj.eps2*obj.mu0/2)*sqrt(sqrt(1+(cond^2/(obj.eps2*2*pi*2.45*10^9)^2))-1);
+            obj.betagamma = 2*pi*(2.45*10^9)*sqrt(obj.eps2*obj.mu0/2)*sqrt(sqrt(1+(cond^2/(obj.eps2*2*pi*2.45*10^9)^2))+1);
         end
         
         %Affiche le mur dans l'environement 
