@@ -12,6 +12,8 @@ classdef Wall
         eps2; %Permitivite mur
         Z2 ; %Impedance mur
         betam ; %Norme du vecteur d'onde dans le mur
+        alpha;
+        betagamma;
     end
     
     properties (Constant = true) %Constantes utiles dans les calculs
@@ -34,7 +36,8 @@ classdef Wall
             obj.eps2 = obj.perm * obj.eps0;
             obj.Z2 = sqrt((obj.eps2)/(obj.mu0));
             obj.betam = 2*pi*(2.45*10^9)*sqrt(obj.eps2*obj.mu0);
-            
+            obj.alpha = 2*pi*(2.45*10^9)*sqrt(obj.eps2*obj.mu0/2)*sqrt(sqrt(1+(cond/(obj.eps2*2*pi*2.45*10^9)^2))-1);
+            obj.betagamma = 2*pi*(2.45*10^9)*sqrt(obj.eps2*obj.mu0/2)*sqrt(sqrt(1+(cond/(obj.eps2*2*pi*2.45*10^9)^2))+1);
         end
         
         %Affiche le mur dans l'environement 
@@ -50,8 +53,8 @@ classdef Wall
                 (obj.Z2*cos(thetai)+obj.Z1*cos(thetat)); %Coefficient de reflexion normal
             s = obj.ep/cos(thetat); %Distance parcourue dans le mur
             %Calcul du coefficient de transmission par 8.44:
-            T = (exp(-i*(obj.betam*s))*(1 - gammap^2))/... 
-                (1- (gammap^2 * exp(-2*i*obj.betam*s + i*2*obj.beta*s*sin(thetat)*sin(thetai))));
+            T = (exp(-((obj.alpha+i*obj.betagamma)*s))*(1 - gammap^2))/... 
+                (1- (gammap^2 * exp(-2*(obj.alpha+i*obj.betagamma)*s + i*2*obj.beta*s*sin(thetat)*sin(thetai))));
         end
         
         %Renvoie le coefficient de reflexion sur le mur
@@ -61,8 +64,8 @@ classdef Wall
                 (obj.Z2*cos(thetai)+obj.Z1*cos(thetat)); %Coefficient de réflection normal
             s = obj.ep/cos(thetat); %Distance parcourue dans le mur
             %Calcul du coefficient de reflexion par 8.43:
-            Gamma = gammap + (1-gammap^2)*((gammap * exp(-2*i*obj.betam*s + i*2*obj.beta*s*sin(thetat)*sin(thetai)))/...
-                (1- (gammap^2 * exp(-2*i*obj.betam*s + i*2*obj.beta*s*sin(thetat)*sin(thetai)))));
+            Gamma = gammap + (1-gammap^2)*((gammap * exp(-2*(obj.alpha+i*obj.betagamma)*s + i*2*obj.beta*s*sin(thetat)*sin(thetai)))/...
+                (1- (gammap^2 * exp(-2*(obj.alpha+i*obj.betagamma)*s + i*2*obj.beta*s*sin(thetat)*sin(thetai)))));
         end
         
         
